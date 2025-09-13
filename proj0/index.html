@@ -72,8 +72,8 @@
     /* Figure grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px; /* closer spacing */
       margin: 18px 0 8px;
     }
     figure { margin: 0; text-align: center; }
@@ -82,7 +82,7 @@
       height: auto;
       border: 1px solid var(--border);
       border-radius: 6px;
-      max-height: 300px;
+      max-height: 360px; /* slightly larger */
       object-fit: cover;
     }
     figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
@@ -95,7 +95,7 @@
       :root { --sidebar-w: 0px; }
       .sidebar { display: none; }
       .container { margin-left: 0; padding: 18px 16px; max-width: 100%; width: 100%; }
-      figure img { max-height: 200px; }
+      figure img { max-height: 240px; }
     }
   </style>
 </head>
@@ -174,7 +174,7 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="assets/dolly-zoom.gif" alt="Dolly zoom of my buddy Lindy" />
+          <img src="assets/dolly-zoom.jpg" alt="Dolly zoom of my buddy Lindy" />
           <figcaption>Dolly zoom of my buddy Lindy</figcaption>
         </figure>
       </div>
