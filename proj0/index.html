@@ -63,9 +63,21 @@
     p { margin: 12px 0; font-size: 16px; }
 
     /* Figure grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin: 18px 0 8px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 18px 0 8px;
+    }
     figure { margin: 0; text-align: center; }
-    figure img { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; }
+    figure img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 300px; /* limit vertical size */
+      object-fit: cover;
+    }
     figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
 
     /* Footer */
@@ -76,6 +88,7 @@
       :root { --sidebar-w: 0px; }
       .sidebar { display: none; }
       .container { margin-left: 0; padding: 18px 16px; }
+      figure img { max-height: 200px; }
     }
   </style>
 </head>
@@ -112,7 +125,7 @@
       <p>
         The close-up selfie accentuates the facial features closest to the camera, exaggerating my nose in comparison to the rest of my face. 
         In contrast, the zoomed-in selfie taken further away is a more accurate representation of how I look, 
-        because the relative difference in distance between my various facial features is small. 
+        because the relative difference in distance between my various facial features are small. 
       </p>
       <div class="grid">
         <figure>
@@ -155,10 +168,6 @@
       <div class="grid">
         <figure>
           <img src="assets/dolly-zoom.jpg" alt="Dolly zoom of my buddy Lindy" />
-          <!-- If you have a GIF/MP4, swap the <img> for a <video> element below. -->
-          <!--
-          <video src="assets/dolly-zoom.mp4" controls playsinline></video>
-          -->
           <figcaption>Dolly zoom of my buddy Lindy</figcaption>
         </figure>
       </div>
