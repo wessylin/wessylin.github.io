@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project 1: Images of the Russian Empire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 900px;
+      line-height: 1.6;
+      background: #fff;
+      color: #000;
+      padding: 0 16px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+    h2 {
+      margin-top: 30px;
+      border-left: 4px solid #000;
+      padding-left: 10px;
+    }
+    p {
+      margin: 12px 0;
+    }
+    .images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    figure {
+      flex: 1 1 250px;
+      text-align: center;
+    }
+    figure img {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    figcaption {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #555;
+    }
+    a.back {
+      display: inline-block;
+      margin-top: 40px;
+      text-decoration: none;
+      color: #000;
+      border: 1px solid #000;
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+    a.back:hover {
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Project 1: Images of the Russian Empire</h1>
+  <hr>
+
+  <h2>Overview</h2>
+  <p>
+    This project uses computer vision techniques to colorize early Prokudin-Gorskii glass plate photographs.
+    The photographs were originally captured as three grayscale images (R, G, B channels) stacked vertically.  
+    I separated and aligned them to reconstruct full-color images. In the process, I learned about image
+    pyramid techniques and saw how three monochrome images can be combined into striking color photos.
+  </p>
+
+  <h2>Part 1: Naive Approach — Iterative</h2>
+  <p>
+    My first approach was to convert each image into an array and try exhaustive search over pixel shifts
+    (x and y directions) to find alignment. I tested both L2 norm and normalized cross-correlation (NCC);
+    for smaller images, NCC produced more stable results. To improve alignment, I cropped 10% of the image
+    borders and compared results. Cropping both reference and target before shifting gave the best alignment.
+  </p>
+
+  <div class="images">
+    <figure>
+      <img src="./media/cathedral.jpg" alt="Cathedral">
+      <figcaption>Cathedral</figcaption>
+    </figure>
+    <figure>
+      <img src="./media/monastery.jpg" alt="Monastery">
+      <figcaption>Monastery</figcaption>
+    </figure>
+    <figure>
+      <img src="./media/tobolsk.jpg" alt="Tobolsk">
+      <figcaption>Tobolsk</figcaption>
+    </figure>
+  </div>
+
+  <a href="../index.html" class="back">← Back to Home</a>
+</body>
+</html>
 
