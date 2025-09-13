@@ -1,1 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 0: Becoming Friends with Your Camera</title>
+  <style>
+    :root {
+      --sidebar-w: 200px;
+      --border: #e5e5e5;
+      --text: #000;
+      --muted: #555;
+      --bg: #fff;
+      --bg-soft: #fafafa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .brand { font-size: 16px; font-weight: 700; padding: 0 20px 8px; }
+    .nav { list-style: none; margin: 0; padding: 8px 0; }
+    .nav a {
+      display: block; padding: 12px 20px; text-decoration: none; color: #222;
+    }
+    .nav a:hover { background: #f0f0f0; }
+    .nav a.active { background: #111; color: #fff; font-weight: 600; }
 
+    /* Main */
+    .container { margin-left: var(--sidebar-w); padding: 32px 28px; }
+    h1 { font-size: 44px; margin: 0 0 6px; }
+    .subtitle { font-size: 20px; color: var(--muted); margin-bottom: 24px; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 24px 0 32px; }
+
+    /* Section heading with left rule */
+    .section-title {
+      font-size: 28px; margin: 40px 0 10px; font-weight: 800; position: relative; padding-left: 16px;
+    }
+    .section-title::before {
+      content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; background: #111;
+    }
+
+    p.lead { font-size: 18px; }
+
+    /* Figure grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin: 18px 0 8px; }
+    figure { margin: 0; text-align: center; }
+    figure img { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; }
+    figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
+
+    /* Footer */
+    .footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+
+    /* Responsive tweak for very small screens */
+    @media (max-width: 680px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .container { margin-left: 0; padding: 18px 16px; }
+      h1 { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Wesley Lin</div>
+    <nav>
+      <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a class="active" href="./index.html">Project 0</a></li>
+        <li><a href="../proj1/index.html">Project 1</a></li>
+        <li><a href="../proj2/index.html">Project 2</a></li>
+        <li><a href="../proj3/index.html">Project 3</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="container">
+    <h1>Project 0: Becoming Friends with Your Camera</h1>
+    <div class="subtitle">CS180: Intro to Computer Vision & Computational Photography</div>
+    <hr />
+
+    <section>
+      <h2 class="section-title">Overview</h2>
+      <p class="lead">
+        In this mini‑project, I explored the relationships between perspective, focal length (zoom), and the
+        center of projection. Through a selfie study, an architectural comparison, and a short dolly‑zoom clip,
+        I observed how camera position and focal length shape perceived geometry and depth.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title">Part 1: Selfie — Wrong vs. Right</h2>
+      <p>
+        The close‑up selfie accentuates facial features nearest the camera, exaggerating my nose relative to
+        the rest of my face. A zoomed‑in shot from farther away better represents how I look because the
+        relative distance differences between features are smaller.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="assets/selfie-close.jpg" alt="Close-up selfie" />
+          <figcaption>Close‑up selfie (wide, near subject)</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/selfie-zoomed-far.jpg" alt="Zoomed in selfie from farther away" />
+          <figcaption>Zoomed‑in selfie from farther away (narrower FOV)</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Part 2: Architectural Perspective Compression</h2>
+      <p>
+        Changing distance and zoom alters perceived depth. From farther away with more zoom, parallel lines
+        appear more parallel and façades look flatter; moving closer with less zoom accentuates convergence
+        and depth.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="assets/regent-far-zoomed.jpg" alt="Regent Street farther away, zoomed in" />
+          <figcaption>Regent Street — farther away, zoomed in</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/regent-close-nozoom.jpg" alt="Regent Street closer up, no zoom" />
+          <figcaption>Regent Street — closer up, no zoom</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Part 3: The Dolly Zoom</h2>
+      <p>
+        A shot of my friend demonstrating the dolly‑zoom effect: the camera moves forward while zooming out to
+        keep the subject the same size, dramatically changing the background perspective. The background
+        appears to stretch or compress while the subject remains stable.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="assets/dolly-zoom.jpg" alt="Dolly zoom of my buddy Lindy" />
+          <!-- If you have a GIF/MP4, swap the <img> for a <video> element below. -->
+          <!--
+          <video src="assets/dolly-zoom.mp4" controls playsinline></video>
+          -->
+          <figcaption>Dolly zoom of my buddy Lindy</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="footer">© 2025 Wesley Lin</div>
+  </main>
+</body>
+</html>
