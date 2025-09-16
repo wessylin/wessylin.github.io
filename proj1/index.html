@@ -132,29 +132,35 @@
     <section>
       <h2 class="section-title">Overview</h2>
       <p>
-        This project uses computer vision techniques to colorize early Prokudin-Gorskii glass plate photographs.
-        Each scene was captured as three vertically stacked grayscale images (B, G, R channels). I separated and
-        aligned them to reconstruct full-color images and explored how pyramid-based alignment improves results
-        on larger images.
+        This project applies computer vision techniques to colorize early Prokudin–Gorskii glass plate photographs. 
+        Each scene was captured as three vertically stacked grayscale images (B, G, R channels). I separate the channels 
+        and align them to reconstruct full-color images, and I explore how a pyramid-based alignment strategy improves results 
+        on larger and finer images.
       </p>
     </section>
 
     <section>
       <h2 class="section-title">Problem</h2>
       <p>
-        Given a single grayscale plate with three stacked channel exposures, align the channels so that
-        corresponding scene features (edges, corners, textures) overlap correctly. Misalignment produces color
-        fringing; the task is to find integer (or subpixel) shifts per channel that minimize misalignment error.
+        Given a single grayscale plate with three stacked exposures, the goal is to align the channels so that corresponding scene features 
+        (edges, corners, textures) overlap correctly. Misalignment produces color fringing, so the task is to find integer (or subpixel) 
+        shifts per channel that minimize this error.
       </p>
     </section>
 
     <section>
-      <h2 class="section-title">Part 1: Naive Approach — Iterative</h2>
+      <h2 class="section-title">Part 1: Naive Approach – Single-Scale Alignment</h2>
       <p>
-        I converted each plate into three channel images and tried exhaustive search over integer pixel shifts
-        (Δx, Δy) to align G and B to R. I compared L2 distance and normalized cross-correlation (NCC). For small
-        images, NCC was more stable. Cropping ~10% off borders before scoring reduced edge artifacts and improved
-        the alignment estimates.
+        My initial approach used an exhaustive single-scale alignment. I read each image, converted it to floating point, 
+        split it into Blue, Green, and Red plates, and used a normalized cross-correlation (NCC) similarity metric to align 
+        the three images by selecting the shift with the highest NCC score. 
+
+        My iterative NCC search uses two nested loops over a window of ±15 pixels to test every integer shift in x and y and 
+        choose the best alignment. To improve robustness, I compute NCC only on the central region by cropping 33% from each border. 
+        This ensures the score is dominated by the main subject rather than frames or degraded edges. 
+        I first tried a 10% crop but found that 33% produced better results. After NCC alignment, I post-process by trimming an additional 
+        3% from the borders to suppress wraparound and scanning artifacts, producing cleaner final images. This exhaustive search 
+        works well for smaller JPGs, but processing slows dramatically on larger TIF files.
       </p>
     </section>
 
