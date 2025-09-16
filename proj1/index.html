@@ -165,11 +165,18 @@
     </section>
 
     <section>
-      <h2 class="section-title">Part 2: Improved Approach — Image Pyramid</h2>
+      <h2 class="section-title">Part 2: Improved Approach – Pyramid Image Alignment:</h2>
       <p>
-        For larger plates, exhaustive search becomes slow and less robust. I built an image pyramid: align coarser,
-        downsampled versions first to get a rough shift, then refine at progressively higher resolutions. This
-        approach significantly reduced compute while improving overall alignment, especially on high-resolution images.
+        To optimize alignment for larger, higher-resolution TIF files, I extend the NCC approach with an image pyramid that builds on the basic algorithm. 
+        I recursively downsample the reference and target images by a factor of two (up to eight levels) until they are small enough for an exhaustive search. 
+        At the coarsest level, I run the NCC search with a window size of 15 to obtain a coarse shift. Decreasing the window size increases speed at some cost to accuracy. 
+        After trying window sizes from 18 down to 12, I found 15 to be a good balance. The coarse shift estimate is then doubled as I move up each level of the pyramid, 
+        and at each finer level I refine the alignment within a smaller local window of 6 pixels. 
+
+        The image pyramid approach successfully aligned all images except emir.tif. That failure likely stems from the stronger exposure and contrast differences across 
+        the channels that weaken raw NCC. An even more improved approach would be to use edge detection with gradients, which is something I am excited to explore next. 
+
+        Below are my results on the 14 required images, along with 3 additional examples of my choice from Prokudin–Gorskii’s collection.
       </p>
     </section>
 
