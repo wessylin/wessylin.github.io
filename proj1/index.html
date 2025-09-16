@@ -146,6 +146,15 @@
         (edges, corners, textures) overlap correctly. Misalignment produces color fringing, so the task is to find integer (or subpixel) 
         shifts per channel that minimize this error.
       </p>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/plate_negative.png" alt="plate_negative">
+          <figcaption>
+            <div class="offset">A preprocessed glass plate negative of the Cathedral.</div>
+          </figcaption>
+        </figure>
+      </div>
     </section>
 
     <section>
@@ -162,6 +171,16 @@
         3% from the borders to suppress wraparound and scanning artifacts, producing cleaner final images. This exhaustive search 
         works well for smaller JPGs, but processing slows dramatically on larger TIF files.
       </p>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/comparison.png" alt="comparison">
+          <figcaption>
+            <div class="offset">A comparison before and after NCC alignment on a smaller Emir portrait.</div>
+          </figcaption>
+        </figure>
+      </div>
+
     </section>
 
     <section>
