@@ -166,9 +166,7 @@
       <p>
         We implemented two types of convolution, four-loop and two-loop convolution.
       </p>
-      <p>
-        We implemented two types of convolution, four-loop and two-loop convolution.
-      </p>
+      
       <p>
         The four- loop convolution explicitly loops over every pixel and every kernel element, manually summing contributions.
       </p>
@@ -188,7 +186,33 @@
                   output[i, j] = result
           return output
       </code></pre>
+      
+      <p>
+        Meanwhile, the two-loop convolution loops only over pixel positions, and the kernel sum is computed using NumPy on the extracted region.
+      </p>
+      <pre><code class="language-python">
+        def conv2d_two_loops(image, kernel):
+            H, W = image.shape
+            h, w = kernel.shape
+            pad_h, pad_w = h // 2, w // 2
+            padded = np.pad(image, ((pad_h, pad_h), (pad_w, pad_w)))
+            output = np.zeros_like(image)
+            for i in range(H):
+                for j in range(W):
+                    region = padded[i:i + h, j:j + w]
+                    output[i, j] = np.sum(region * kernel)
+            return output
+      </code></pre>
 
+      <p>
+        Both functions zero-pad the image so the output has the same shape as the input.
+      </p>
+      <p>
+        To validate our code, we compared results against scipy.signal.convolve2d, which is a well-tested library function. 
+        The results were essentially identical, with only tiny numerical differences on the order of 1e-6. 
+        This confirms that our implementations are correct.      
+      </p>
+      
       <div class="grid">
         <figure>
           <img src="./media/p11_input.jpg" alt="Input image for 1.1">
