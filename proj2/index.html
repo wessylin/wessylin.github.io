@@ -144,10 +144,19 @@
 
       <h3 class="subsection-title">Overview</h3>
       <p>
-        Briefly describe what you implemented in Part 1 (filters, convolution, gradients) and what you observed.
-        Mention datasets/images you used and any key takeaways.
+        In this part, we build intuition for how 2D convolutions and filtering work in image processing. 
+        We begin with the finite difference operators​​, which approximate derivatives in the horizontal and vertical directions. 
+        By convolving an image with these filters, we can highlight areas of rapid intensity change. 
+        This sets the foundation for later steps, where we compute gradient magnitudes, threshold edge maps, and explore more advanced 
+        filters like the derivative of a Gaussian.
       </p>
-
+      <div class="grid">
+        <figure>
+          <img src="./media/derivatives" alt="derivatives">
+          <figcaption>Input</figcaption>
+        </figure>
+      </div>
+      
       <h3 class="subsection-title">Part 1.1: Convolutions from Scratch!</h3>
       <p>
         Summarize your <em>from-scratch</em> convolution implementation (padding, kernel flip or not, stride=1),
