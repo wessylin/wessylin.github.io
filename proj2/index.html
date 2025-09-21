@@ -159,9 +159,36 @@
       
       <h3 class="subsection-title">Part 1.1: Convolutions from Scratch!</h3>
       <p>
-        Summarize your <em>from-scratch</em> convolution implementation (padding, kernel flip or not, stride=1),
-        and how you verified it (e.g., compare to a library call, test on simple kernels).
+        In this subsection, we implemented the 2D convolution operation from scratch to better understand how filtering works at the pixel level. 
+        Convolution is the foundation of many image processing techniques including blurring, sharpening, and edge detection. 
+        So writing our own versions helps us see exactly how kernels slide over an image and combine pixel neighbors.
       </p>
+      <p>
+        We implemented two types of convolution, four-loop and two-loop convolution.
+      </p>
+      <p>
+        We implemented two types of convolution, four-loop and two-loop convolution.
+      </p>
+      <p>
+        The four- loop convolution explicitly loops over every pixel and every kernel element, manually summing contributions.
+      </p>
+      <pre><code class="language-python">
+      def conv2d_four_loops(image, kernel):
+          H, W = image.shape
+          h, w = kernel.shape
+          pad_h, pad_w = h // 2, w // 2
+          padded = np.pad(image, ((pad_h, pad_h), (pad_w, pad_w)))
+          output = np.zeros_like(image)
+          for i in range(H):
+              for j in range(W):
+                  result = 0.0
+                  for m in range(h):
+                      for n in range(w):
+                          result += padded[i + m, j + n] * kernel[m, n]
+                  output[i, j] = result
+          return output
+      </code></pre>
+
       <div class="grid">
         <figure>
           <img src="./media/p11_input.jpg" alt="Input image for 1.1">
