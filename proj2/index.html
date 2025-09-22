@@ -152,7 +152,7 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/derivatives.png" alt="derivatives" width="400">
+          <img src="./media/derivatives.png" alt="derivatives" width="350">
           <figcaption>Input</figcaption>
         </figure>
       </div>
@@ -215,25 +215,37 @@
       
       <div class="grid">
         <figure>
-          <img src="./media/convolutions_scratch.png" alt="convolutions_scratch" width="800">
+          <img src="./media/convolutions_scratch.png" alt="convolutions_scratch" width="800" height="500">
           <figcaption>A comparison between our 2D and Scipy's convolutions on horizontal and vertical edges.</figcaption>
         </figure>
       </div>
 
       <h3 class="subsection-title">Part 1.2: Finite Difference Operator</h3>
       <p>
-        Show horizontal/vertical gradients (Dx, Dy), gradient magnitude, and thresholded edges. Note any choices
-        for normalization/threshold and observations about noise and alignment.
+        Taking our work from part 1.1, we applied the finite difference filters to approximate the partial derivatives of a cameraman image 
+        in the x and y directions. 
       </p>
       <div class="grid">
         <figure>
           <img src="./media/cameraman_edges.png" alt="cameraman_edges">
         </figure>
+      </div>
+      <p>
+        We then combined these responses into a gradient magnitude image​, which captures edges in all directions. 
+        To turn this into a binary edge map, we applied a threshold to suppress noise while preserving meaningful edges.
+      </p>
+      <p>
+        I experimented with threshold values in the range 0.15–0.30 and observed how the resulting edge maps changed. 
+        Lower thresholds included weaker edges but also introduced noise, while higher thresholds reduced noise but risked losing fine details. 
+        I found that a value of 0.20 provided the best balance, producing a clean edge map that retained important details from the cameraman 
+        without excessive noise from the background.
+      </p>
+      <div class="grid">
         <figure>
           <img src="./media/cameraman_binarized.png" alt="cameraman_binarized">
         </figure>
       </div>
-
+      
       <h3 class="subsection-title">Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
       <p>
         Explain building DoG via (a) blurring then finite differences, or (b) convolving a Gaussian with the
