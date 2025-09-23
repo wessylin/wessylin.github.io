@@ -243,30 +243,44 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/cameraman_binarized.png" alt="cameraman_binarized" width="700">
+          <img src="./media/cameraman_binarized.png" alt="cameraman_binarized" width="600">
           <figcaption>The Cameraman binarized.</figcaption>
         </figure>
       </div>
       
       <h3 class="subsection-title">Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
       <p>
-        Explain building DoG via (a) blurring then finite differences, or (b) convolving a Gaussian with the
-        derivative operator (equivalently: derivative of Gaussian). Compare results vs plain finite differences.
+        In Part 1.3, we extended our finite difference edge detection by incorporating Gaussian smoothing to reduce noise. 
+        We constructed a 2D Gaussian filter using cv2.getGaussianKernel with parameters ksize = 7 and σ = 1.2, 
+        and applied it in two equivalent ways.
       </p>
       <div class="grid">
         <figure>
           <img src="./media/p13_gauss.jpg" alt="Gaussian-blurred image">
           <figcaption>Gaussian-Blurred</figcaption>
         </figure>
+      </div>
+      <p>
+        In the first approach, we blurred the image with the Gaussian filter and then applied the finite difference operators Dx and Dy 
+        to compute smoothed derivatives. In the second approach, we built Derivative-of-Gaussian (DoG) filters by convolving the Gaussian 
+        with Dx and Dy​ beforehand, then applied these directly to the image. Both methods produced nearly identical results, 
+        with gradient magnitude maps that matched up to tiny numerical differences, confirming the theoretical equivalence of 
+        “smooth then finite differences” and “differentiate the Gaussian.”
+      </p>
+      <div class="grid">
         <figure>
-          <img src="./media/p13_dog_mag.jpg" alt="DoG magnitude">
-          <figcaption>DoG Magnitude</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p13_dog_edges.jpg" alt="DoG edges">
-          <figcaption>DoG Edges (Thresholded)</figcaption>
+          <img src="./media/p13_gauss.jpg" alt="Gaussian-blurred image">
+          <figcaption>Gaussian-Blurred</figcaption>
         </figure>
       </div>
+      <p>
+        Compared to raw finite differences, which produced noisy edge maps, the Gaussian-smoothed and DoG results yielded cleaner, 
+        more continuous edges with much less noise, though the edges appeared slightly thicker. 
+      </p>
+      <p>
+        This demonstrated both the importance of smoothing before differentiation and the efficiency of DoG filters in combining the two 
+        operations into a single step.
+      </p>
     </section>
 
     <!-- ===============================
