@@ -271,7 +271,7 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/cameraman_dog" alt="cameraman_dog">
+          <img src="./media/cameraman_dog.png" alt="cameraman_dog">
           <figcaption>The Cameraman with the Gaussian filters.</figcaption>
         </figure>
       </div>
@@ -299,24 +299,26 @@
 
       <h3 class="subsection-title">Part 2.1: Image “Sharpening”</h3>
       <p>
-        Describe the pipeline (blur → subtract to get high-frequency → add back to original). Include the chosen
-        blur kernel/σ and any artifacts or over-sharpening you noticed.
+        In Part 2.1, I implemented the unsharp mask filter, a technique that enhances high-frequency components in images to sharpen them. 
+        Sharpness in images is tied to edges and fine details, which correspond to high frequencies.
+      </p>
+      <p>
+        First, I generated a blurred version of the original image by convolving with a Gaussian kernel.
       </p>
       <div class="grid">
         <figure>
           <img src="./media/p21_input.jpg" alt="Original image">
           <figcaption>Original</figcaption>
         </figure>
-        <figure>
-          <img src="./media/p21_blur.jpg" alt="Blurred image">
-          <figcaption>Blurred</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p21_sharp.jpg" alt="Sharpened image">
-          <figcaption>Sharpened</figcaption>
-        </figure>
       </div>
-
+      <p>
+        Using σ=1.2 and a 7×7 kernel provides a moderate blur large enough to suppress noise but not so large that edges are lost. 
+        Subtracting this blurred image from the original isolates the high frequencies.      
+      </p>
+      <p>
+        Using σ=1.2 and a 7×7 kernel provides a moderate blur large enough to suppress noise but not so large that edges are lost. 
+        Subtracting this blurred image from the original isolates the high frequencies.      
+      </p>
       <h3 class="subsection-title">Part 2.2: Hybrid Images</h3>
       <p>
         Show the two source images, explain which contributes low vs. high frequencies, and display the hybrid
