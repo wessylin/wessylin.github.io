@@ -307,18 +307,58 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/p21_input.jpg" alt="Original image">
-          <figcaption>Original</figcaption>
+          <img src="./media/formula_kernel.png" alt="formula_kernel">
+          <figcaption>The formula for the Gaussian kernel. </figcaption>
         </figure>
       </div>
       <p>
         Using σ=1.2 and a 7×7 kernel provides a moderate blur large enough to suppress noise but not so large that edges are lost. 
         Subtracting this blurred image from the original isolates the high frequencies.      
       </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/taj_frequencies.png" alt="taj_frequencies">
+          <figcaption>The blurred and high-frequency Taj Mahal image through the low and high pass, respectively.</figcaption>
+        </figure>
+      </div>
       <p>
-        Using σ=1.2 and a 7×7 kernel provides a moderate blur large enough to suppress noise but not so large that edges are lost. 
-        Subtracting this blurred image from the original isolates the high frequencies.      
+        The sharpened result is then formed by adding a scaled version of these high frequencies back.
       </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/formula_alpha.png" alt="formula_alpha">
+          <figcaption>The formula for unsharp masking.</figcaption>
+        </figure>
+      </div>
+      <p>
+        The parameter α controls the sharpening strength. At α=0.5, the effect is subtle; at α=1.0 and α=1.5, the image looks sharp and natural; 
+        at α=2.0 the effect is almost, and higher values risk producing halos or unnatural contrast.   
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/taj_sharpened.png" alt="taj_sharpened">
+          <figcaption>The sharpened images of Taj Mahal with various alpha values.</figcaption>
+        </figure>
+      </div>
+      <p>
+        This approach demonstrates how combining a low-pass blur with a weighted high-pass boost can enhance image clarity while maintaining realism, 
+        with α=1.0 and α=1.5 providing the best balance. 
+      </p>
+      <p>
+        Here are some additional sharpened images of my choosing.  
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/taj_sharpened.png" alt="sharpened_1">
+        </figure>
+        <figure>
+          <img src="./media/taj_sharpened.png" alt="sharpened_2">
+        </figure>
+        <figure>
+          <img src="./media/taj_sharpened.png" alt="sharpened_3">
+        </figure>
+      </div>
+      
       <h3 class="subsection-title">Part 2.2: Hybrid Images</h3>
       <p>
         Show the two source images, explain which contributes low vs. high frequencies, and display the hybrid
