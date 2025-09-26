@@ -447,8 +447,11 @@
       
       <h3 class="subsection-title">Part 2.3: Gaussian and Laplacian Stacks</h3>
       <p>
-        Show the two source images, explain which contributes low vs. high frequencies, and display the hybrid
-        result. If you have frequency visualizations (e.g., log magnitude of FFT), add them too.
+        Following up on our work in hybrid images, we implemented Gaussian and Laplacian stacks to explore multiresolution blending. 
+        A Gaussian stack is built by repeatedly applying a Gaussian blur with increasing σ values, producing progressively 
+        smoother versions of the image without downsampling. The Laplacian stack is then obtained by subtracting adjacent Gaussian levels, 
+        effectively isolating band-pass frequency information at different scales, with the final residual level capturing the coarsest structure. 
+        Unlike a pyramid, where images are reduced in resolution at each level, a stack keeps all images the same size, which makes direct visualization and pixelwise blending simpler.
       </p>
       <div class="grid">
         <figure>
@@ -459,9 +462,20 @@
           <img src="./media/p22_high.jpg" alt="High-frequency source">
           <figcaption>High-Frequency Source</figcaption>
         </figure>
+      </div>
+      <p>
+        To create the “Oraple,” we constructed Laplacian stacks for both images, applied a soft half-mask at each level to keep the right side 
+        of the apple and the left side of the orange, and then blended the masked Laplacian levels together. Finally, we reconstructed the full 
+        image by summing all blended Laplacian levels, producing a seamless composite where the transition between apple and orange is smooth across frequencies.
+      </p>
+      <div class="grid">
         <figure>
-          <img src="./media/p22_hybrid.jpg" alt="Hybrid result">
-          <figcaption>Hybrid Result</figcaption>
+          <img src="./media/p22_low.jpg" alt="Low-frequency source">
+          <figcaption>Low-Frequency Source</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/p22_high.jpg" alt="High-frequency source">
+          <figcaption>High-Frequency Source</figcaption>
         </figure>
       </div>
     </section>
