@@ -362,21 +362,22 @@
 
       <h3 class="subsection-title">Part 2.2: Hybrid Images</h3>
       <p>
-        Show the two source images, explain which contributes low vs. high frequencies, and display the hybrid
-        result. If you have frequency visualizations (e.g., log magnitude of FFT), add them too.
+        In Part 2.2, we created hybrid images by combining the low frequencies of one image with the high frequencies of another. 
+        After aligning the two inputs using the provided alignment code, we constructed the low-pass image by convolving the “far-view” image with a Gaussian kernel. 
+        The high-pass image was obtained by subtracting a blurred version of the “near-view” image from itself, which removes smooth structures and preserves only fine edges and detail.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/p22_low.jpg" alt="Low-frequency source">
-          <figcaption>Low-Frequency Source</figcaption>
+          <img src="./media/cat.png" alt="cat">
         </figure>
         <figure>
-          <img src="./media/p22_high.jpg" alt="High-frequency source">
-          <figcaption>High-Frequency Source</figcaption>
+          <img src="./media/cat_lp" alt="cat_lp">
         </figure>
         <figure>
-          <img src="./media/p22_hybrid.jpg" alt="Hybrid result">
-          <figcaption>Hybrid Result</figcaption>
+          <img src="./media/lion.png" alt="lion">
+        </figure>
+        <figure>
+          <img src="./media/lion_hp.png" alt="lion_hp">
         </figure>
       </div>
 
