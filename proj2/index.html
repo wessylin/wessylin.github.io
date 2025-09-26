@@ -305,12 +305,12 @@
       <p>
         First, I generated a blurred version of the original image by convolving with a Gaussian kernel.
       </p>
-      <div class="grid">
+      <!-- <div class="grid">
         <figure>
           <img src="./media/formula_kernel.png" alt="formula_kernel"  width="350">
           <figcaption>The formula for the Gaussian kernel. </figcaption>
         </figure>
-      </div>
+      </div> -->
       <p>
         Using σ=1.2 and a 7×7 kernel provides a moderate blur large enough to suppress noise but not so large that edges are lost. 
         Subtracting this blurred image from the original isolates the high frequencies.      
@@ -366,7 +366,6 @@
         After aligning the two inputs using the provided alignment code, we constructed the low-pass image by convolving the “far-view” image with a Gaussian kernel. 
         The high-pass image was obtained by subtracting a blurred version of the “near-view” image from itself, which removes smooth structures and preserves only fine edges and detail.
       </p>
-      </p>
       <div class="grid">
         <figure>
           <img src="./media/cat.png" alt="cat">
@@ -378,7 +377,6 @@
           <img src="./media/lion_hybrid.png" alt="lion_hybrid">
         </figure>
       </div>
-      <p>
       <p>
         The final hybrid was then formed by adding the low-pass and high-pass results together with cutoff frequencies set by σ_ow​ = 8.0 for the low-pass 
         and σ_high = 4.0 for the high-pass, which gave the clearest perceptual switch. Increasing sigma in the low-pass filter removes more detail and makes 
@@ -417,7 +415,6 @@
       <p>
         Below are additional hybrid images I’ve put together.
       </p>
-      </p>
       <div class="grid">
         <figure>
           <img src="./media/derek.png" alt="derek">
@@ -429,8 +426,6 @@
           <img src="./media/derek_hybrid.png" alt="derek_hybrid">
         </figure>
       </div>
-      <p>
-      </p>
       <div class="grid">
         <figure>
           <img src="./media/me_young.png" alt="me_young">
@@ -442,7 +437,6 @@
           <img src="./media/me_hybrid.png" alt="me_hybrid">
         </figure>
       </div>
-      <p>
       
       <h3 class="subsection-title">Part 2.3: Gaussian and Laplacian Stacks</h3>
       <p>
