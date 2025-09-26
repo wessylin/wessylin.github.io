@@ -307,7 +307,7 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/formula_kernel.png" alt="formula_kernel"  width="450">
+          <img src="./media/formula_kernel.png" alt="formula_kernel"  width="400">
           <figcaption>The formula for the Gaussian kernel. </figcaption>
         </figure>
       </div>
@@ -326,7 +326,7 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/formula_alpha.png" alt="formula_alpha"  width="450">
+          <img src="./media/formula_alpha.png" alt="formula_alpha"  width="400">
           <figcaption>The formula for unsharp masking.</figcaption>
         </figure>
       </div>
@@ -366,6 +366,24 @@
         After aligning the two inputs using the provided alignment code, we constructed the low-pass image by convolving the “far-view” image with a Gaussian kernel. 
         The high-pass image was obtained by subtracting a blurred version of the “near-view” image from itself, which removes smooth structures and preserves only fine edges and detail.
       </p>
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/cat.png" alt="cat">
+        </figure>
+        <figure>
+          <img src="./media/lion.png" alt="lion">
+        </figure>
+        <figure>
+          <img src="./media/lion_hybrid.png" alt="lion_hybrid">
+        </figure>
+      </div>
+      <p>
+      <p>
+        The final hybrid was then formed by adding the low-pass and high-pass results together with cutoff frequencies set by σ_ow​ = 8.0 for the low-pass 
+        and σ_high = 4.0 for the high-pass, which gave the clearest perceptual switch. Increasing sigma in the low-pass filter removes more detail and makes 
+        the far-view subject stronger, while decreasing sigma in the high-pass filter keeps only sharper edges and makes the near-view subject more visible. 
+      </p>
       <div class="grid">
         <figure>
           <img src="./media/cat.png" alt="cat">
@@ -380,7 +398,26 @@
           <img src="./media/lion_hp.png" alt="lion_hp">
         </figure>
       </div>
-
+      <p>
+        We used Fourier transforms to visualize the effect of filtering. The log-magnitude spectrum of the low-pass image showed energy concentrated near the
+        origin (low frequencies), while the high-pass spectrum emphasized energy away from the origin (high frequencies). The logarithmic scale was essential 
+        to reveal both low- and high-frequency content in the same plot, since raw magnitude spectra are dominated by low-frequency energy. These visualizations 
+        confirmed that our filters successfully separated the images into complementary frequency bands.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/lion_fft.png" alt="lion_fft">
+          <figcaption>The magnitude Fourier transform spectrums of the low and high pass images.</figcaption>
+        </figure>
+      </div>
+      <p>
+        From up close, the hybrid reveals the high-frequency subject, while from farther away the low-frequency structure dominates—demonstrating how spatial 
+        Filtering and frequency decomposition can be combined to manipulate perception.
+      </p>
+      <p>
+        Below are additional hybrid images I’ve put together.
+      </p>
+      
       <h3 class="subsection-title">Part 2.3: Gaussian and Laplacian Stacks</h3>
       <p>
         Show the two source images, explain which contributes low vs. high frequencies, and display the hybrid
