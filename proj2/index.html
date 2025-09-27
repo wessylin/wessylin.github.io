@@ -477,7 +477,9 @@
 
     <h3 class="subsection-title">Part 2.4: Multiresolution Blending </h3>
       <p>
-        Talk about irregular masks and how we implemented them.
+        In Part 2.4, we extended our multiresolution blending pipeline from Part 2.3 to support irregular masks. Instead of using a simple vertical half-mask, 
+        we loaded a binary mask image (white = keep image A, black = keep image B) and normalized it to a single-channel mask in [0,1]. This base mask was then 
+        expanded into a Gaussian mask stack, ensuring that each frequency band in the Laplacian stack was blended smoothly along the irregular boundary. 
       </p>  
       <div class="grid">
         <figure>
@@ -490,7 +492,10 @@
         </figure>
       </div>
       <p>
-        Using what we built from part 2.3, we blended the UFO and the pyramids of Egypt together.
+        At each level, we computed the blended Laplacians as Lᵢ = Mᵢ · L_Aᵢ + (1 − Mᵢ) · L_Bᵢ, and reconstructed the final composite by summing across all levels. 
+        The result is a seamless hybrid where the transition between images follows the arbitrary shape of the mask, rather than a rigid vertical seam. For this section, 
+        I explored blending a grainy UFO image with a backdrop of Egypt; both images were masked with the irregular seams of the pyramid, since it had a much clearer resolution
+        compared with the UFO. 
       </p>
       <div class="grid">
         <figure>
@@ -500,12 +505,25 @@
           <img src="./media/ufo.jpg" alt="ufo">
         </figure>
         <figure>
-          <img src="./media/ufo_pyramid.png" alt="ufo_pyramid.png">
+          <img src="./media/ufo_pyramid_blend.png" alt="ufo_pyramid.png">
+        </figure>
+      </div>
+      <p>
+        The results of the final blend were great, but interestingly, I found that the pre-blended Laplacian image of the UFO masked with the pyramids was even more realistic.
+        This was likely because the image of the pyramids was colored, while the image of the UFO was black and white, so the black and white results obtained after all the manipulations
+        seemed the most realistic. 
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/ufo_pyramid_blend.png" alt="ufo_pyramid_blend" width="400">
+        </figure>
+        <figure>
+          <img src="./media/ufo_pyramid_best.png" alt="ufo_pyramid_best" width="400">
         </figure>
       </div>
 
       <p>
-        Here is another fun challenge where I tried to blend the Death Star from Star Wars into our moon.
+        Here is another fun challenge where I tried to blend the Death Star from Star Wars into our Moon.
       </p>
       <div class="grid">
         <figure>
