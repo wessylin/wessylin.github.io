@@ -211,38 +211,32 @@
 
             
       <!-- =========================
-           A.2 Data & Results (Consistent Display)
+           A.2 Data & Results (Aligned Boxes)
       ========================== -->
       
-      <!-- Correspondences -->
-      <p><strong>Correspondences</strong> <code>(A &rarr; B)</code></p>
-      <table>
-        <thead>
-          <tr><th><code>#</code></th><th><code>(x, y)</code></th><th><code>(u, v)</code></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>1</code></td><td><code>(766.70, 610.32)</code></td><td><code>(127.50, 540.08)</code></td></tr>
-          <tr><td><code>2</code></td><td><code>(888.38, 655.69)</code></td><td><code>(274.08, 612.34)</code></td></tr>
-          <tr><td><code>3</code></td><td><code>(750.20, 855.74)</code></td><td><code>(82.08, 822.92)</code></td></tr>
-          <tr><td><code>4</code></td><td><code>(876.01, 890.80)</code></td><td><code>(257.56, 866.27)</code></td></tr>
-          <tr><td><code>5</code></td><td><code>(725.45, 1072.29)</code></td><td><code>(53.18, 1074.79)</code></td></tr>
-          <tr><td><code>6</code></td><td><code>(911.07, 1074.35)</code></td><td><code>(292.66, 1072.73)</code></td></tr>
-          <tr><td><code>7</code></td><td><code>(1168.86, 738.19)</code></td><td><code>(600.27, 713.50)</code></td></tr>
-          <tr><td><code>8</code></td><td><code>(1597.83, 659.82)</code></td><td><code>(994.60, 661.89)</code></td></tr>
-        </tbody>
-      </table>
+      <!-- Correspondences (now in a code box like the matrices) -->
+      <p><strong>Correspondences</strong> <code>(A → B)</code></p>
+      <pre><code>#   (x, y)              (u, v)
+      1   (766.70, 610.32)    (127.50, 540.08)
+      2   (888.38, 655.69)    (274.08, 612.34)
+      3   (750.20, 855.74)    (82.08, 822.92)
+      4   (876.01, 890.80)    (257.56, 866.27)
+      5   (725.45, 1072.29)   (53.18, 1074.79)
+      6   (911.07, 1074.35)   (292.66, 1072.73)
+      7   (1168.86, 738.19)   (600.27, 713.50)
+      8   (1597.83, 659.82)   (994.60, 661.89)</code></pre>
       
       <p><strong>System size</strong>: <code>A ∈ ℝ<sup>16×9</sup></code> (two rows per correspondence)</p>
       
-      <!-- Example A rows -->
-      <p><strong>A rows (pair&nbsp;1)</strong></p>
+      <!-- Example A rows (pair 1) -->
+      <p><strong>A rows</strong> <code>(pair 1)</code></p>
       <pre><code>u-row: [-766.7000, -610.3194, -1, 0, 0, 0,  97754.2500,  77815.7177, 127.5000] · h = 0
       v-row: [0, 0, 0, -766.7000, -610.3194, -1, 414079.8306, 329621.6709, 540.0806] · h = 0</code></pre>
       
-      <!-- Full A -->
+      <!-- Full A (kept inside details; lines are flush-left to avoid weird indenting) -->
       <details>
         <summary><strong>Full matrix A</strong> <code>(rounded to 4 decimals)</code></summary>
-        <pre>[[   -766.7       -610.3194      -1.           0.           0.           0.       97754.25     77815.7177     127.5   ]
+        <pre><code>[[   -766.7       -610.3194      -1.           0.           0.           0.       97754.25     77815.7177     127.5   ]
        [      0.           0.           0.        -766.7       -610.3194      -1.      414079.8306  329621.6709     540.0806]
        [   -888.3796    -655.6914      -1.           0.           0.           0.      243487.6457  179712.3213     274.0806]
        [      0.           0.           0.        -888.3796    -655.6914      -1.      543989.1995  401505.2245     612.3387]
@@ -257,7 +251,7 @@
        [  -1168.8613    -738.186       -1.           0.           0.           0.      701637.2684  443114.0187     600.2742]
        [      0.           0.           0.       -1168.8613    -738.186       -1.      833982.5306  526695.7263     713.5   ]
        [  -1597.8333    -659.8161      -1.           0.           0.           0.     1589199.879   656250.9935     994.5968]
-       [      0.           0.           0.       -1597.8333    -659.8161      -1.     1057585.2661  436723.782      661.8871]]</pre>
+       [      0.           0.           0.       -1597.8333    -659.8161      -1.     1057585.2661  436723.782      661.8871]]</code></pre>
       </details>
       
       <!-- Homography -->
@@ -266,6 +260,7 @@
       [ 0.424871   1.573638  -544.629674]
       [ 0.000482  -0.000004     1.000000]</code></pre>
       
+            
             
       <!-- Correspondence visuals -->
       <div class="grid">
