@@ -192,11 +192,20 @@
         <var>h</var> = vec(<var>H</var>).
       </p>
 
+      <p>
+        Concretely, for each pair, I add the “<var>u</var>” row 
+        <code>[&minus;<var>x</var>, &minus;<var>y</var>, &minus;1, 0, 0, 0, <var>u</var><var>x</var>, <var>u</var><var>y</var>, <var>u</var>]</code> and the “<var>v</var>” row 
+        <code>[0, 0, 0, &minus;<var>x</var>, &minus;<var>y</var>, &minus;1, <var>v</var><var>x</var>, <var>v</var><var>y</var>, <var>v</var>]</code>. 
+        I build these rows efficiently with vectorized slices so every other row corresponds to the same point. Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
+        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
+        and good spatial coverage, both of which are important for numerical stability. 
+      </p>
+
       <p><strong>System size</strong>: <code>A ∈ ℝ<sup>16×9</sup></code> (two rows per correspondence)</p>
       
       <details>
         <summary><strong>Full matrix A</strong> (rounded to 4 decimals)</summary>
-        <pre><code>#   [[   -766.7       -610.3194      -1.           0.           0.           0.       97754.25     77815.7177     127.5   ]
+        <pre><code>#        [[   -766.7       -610.3194      -1.           0.           0.           0.       97754.25     77815.7177     127.5   ]
          [      0.           0.           0.        -766.7       -610.3194      -1.      414079.8306  329621.6709     540.0806]
          [   -888.3796    -655.6914      -1.           0.           0.           0.      243487.6457  179712.3213     274.0806]
          [      0.           0.           0.        -888.3796    -655.6914      -1.      543989.1995  401505.2245     612.3387]
@@ -216,7 +225,7 @@
       
       
       <p><strong>Correspondences</strong> <code>(A → B)</code></p>
-      <pre><code>#            (x, y)              (u, v)
+      <pre><code>#                  (x, y)              (u, v)
         Point 1:   (766.70, 610.32)    (127.50, 540.08)
         Point 2:   (888.38, 655.69)    (274.08, 612.34)
         Point 3:   (750.20, 855.74)    (82.08, 822.92)
@@ -225,19 +234,6 @@
         Point 6:   (911.07, 1074.35)   (292.66, 1072.73)
         Point 7:   (1168.86, 738.19)   (600.27, 713.50)
         Point 8:   (1597.83, 659.82)   (994.60, 661.89)</code></pre>
-      
-
-      <p>
-        Concretely, for each pair, I add the “<var>u</var>” row 
-        <code>[&minus;<var>x</var>, &minus;<var>y</var>, &minus;1, 0, 0, 0, <var>u</var><var>x</var>, <var>u</var><var>y</var>, <var>u</var>]</code> and the “<var>v</var>” row 
-        <code>[0, 0, 0, &minus;<var>x</var>, &minus;<var>y</var>, &minus;1, <var>v</var><var>x</var>, <var>v</var><var>y</var>, <var>v</var>]</code>. 
-        I build these rows efficiently with vectorized slices so every other row corresponds to the same point.
-      </p>
-      <p>
-        Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
-        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
-        and good spatial coverage, both of which are important for numerical stability. 
-      </p>
 
       <!-- Example A rows (pair 1) -->
       <p><strong>A rows</strong> (pair 1)</p>
