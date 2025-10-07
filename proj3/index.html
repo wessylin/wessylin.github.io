@@ -192,6 +192,17 @@
         explore normalization later in this project. 
       </p>
 
+      <div class="grid">
+        <figure>
+          <img src="./media/room1_points.jpg" alt="room1_points">
+          <figcaption>Selected correspondences (left).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/room2_points.jpg" alt="room2_points">
+          <figcaption>Selected correspondences (right).</figcaption>
+        </figure>
+      </div>
+
       _________________________________
           
       <p><strong>System size:</strong> <code>A ∈ ℝ<sup>16×9</sup></code> (two rows per correspondence).</p>
@@ -251,16 +262,6 @@
       <pre><code>// Build A h = 0 from N ≥ 4 point pairs, solve via SVD (min singular vector). Normalize points for stability.
       // H is 3×3 up to scale; enforce H[2,2]=1 for display.
       </code></pre>
-      <div class="grid">
-        <figure>
-          <img src="./media/a2_points_src.jpg" alt="points_src">
-          <figcaption>Selected correspondences (source).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/a2_points_dst.jpg" alt="points_dst">
-          <figcaption>Selected correspondences (destination).</figcaption>
-        </figure>
-      </div>
 
       <h3 class="subsection-title" id="a3">Part A.3: Warp the Images</h3>
       <p>
