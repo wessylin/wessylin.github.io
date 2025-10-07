@@ -158,8 +158,25 @@
 
       <h3 class="subsection-title" id="a1">Part A.1: Shoot the Pictures</h3>
       <p>
-        I shot images from a fixed center of projection (rotate the camera in place) to approximate a planar scene and reduce parallax. I ensured sufficient overlap and consistent exposure.
+        In Part A.2, I recover the homography (H) that maps points from Image A to Image B using the Direct Linear Transform (DLT). 
+        Starting from the homogeneous relation x′∼Hx and writing it in inhomogeneous form, each correspondence (x,y) ⁣→ ⁣(u,v) yields two linear 
+        constraints after clearing the denominator. I stack these into a 2N × 9 system A h = 0 with unknowns h = vec(H).
       </p>
+      <p>
+        Concretely, for each pair, I add the “u” row [−x, −y, −1, 0, 0, 0, ux, uy, u ] and the “v” row [ 0, 0, 0, −x, −y, −1, vx, vy, v]. 
+        I build these rows efficiently with vectorized slices so every other row corresponds to the same point.
+      </p>
+      <p>
+        Because A h=0 is homogeneous, I solve for the right singular vector of AAA with the smallest singular value (via SVD), reshape it to 3×3, 
+        and fix the scale by setting H33 ≈ 1. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
+        and good spatial coverage, both of which are important for numerical stability. 
+      </p>
+      <p>
+        I use no normalization here. In practice, adding Hartley normalization or RANSAC improves robustness, but for this part, the plain DLT with N ≥ 4 clean, 
+        well-distributed correspondences recover a valid H and clearly demonstrate the setup, system Ah = 0, and final matrix. We will, however, 
+        explore normalization later in this project. 
+      </p>
+      
       <div class="grid">
         <figure>
           <img src="./media/a1_left.jpg" alt="left">
