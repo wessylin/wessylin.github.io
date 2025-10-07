@@ -196,9 +196,7 @@
         Concretely, for each pair, I add the “<var>u</var>” row 
         <code>[&minus;<var>x</var>, &minus;<var>y</var>, &minus;1, 0, 0, 0, <var>u</var><var>x</var>, <var>u</var><var>y</var>, <var>u</var>]</code> and the “<var>v</var>” row 
         <code>[0, 0, 0, &minus;<var>x</var>, &minus;<var>y</var>, &minus;1, <var>v</var><var>x</var>, <var>v</var><var>y</var>, <var>v</var>]</code>. 
-        I build these rows efficiently with vectorized slices so every other row corresponds to the same point. Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
-        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
-        and good spatial coverage, both of which are important for numerical stability. 
+        I build these rows efficiently with vectorized slices so every other row corresponds to the same point.
       </p>
 
       <p><strong>System size</strong>: <code>A ∈ ℝ<sup>16×9</sup></code> (two rows per correspondence)</p>
@@ -225,7 +223,7 @@
       
       
       <p><strong>Correspondences</strong> <code>(A → B)</code></p>
-      <pre><code>#                  (x, y)              (u, v)
+      <pre><code>#                    (x, y)              (u, v)
         Point 1:   (766.70, 610.32)    (127.50, 540.08)
         Point 2:   (888.38, 655.69)    (274.08, 612.34)
         Point 3:   (750.20, 855.74)    (82.08, 822.92)
@@ -245,7 +243,13 @@
       <pre><code>#   [ 1.920604  -0.044450 -1279.934283]
     [ 0.424871   1.573638  -544.629674]
     [ 0.000482  -0.000004     1.000000]</code></pre>  
-
+      
+      <p>
+        Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
+        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
+        and good spatial coverage, both of which are important for numerical stability. 
+      </p>  
+      
       <p>
         I use no normalization here. In practice, adding Hartley normalization or RANSAC improves robustness, but for this part, the plain DLT with <var>N</var> &ge; 4 clean, 
         well-distributed correspondences recovers a valid <var>H</var> and clearly demonstrates the setup, system <var>A</var><var>h</var> = 0, and final matrix. We will, however, 
