@@ -146,23 +146,35 @@
 
       <h3 class="subsection-title" id="overview">Overview</h3>
       <p>
-        In Part A, we built image mosaics by estimating planar projective transforms and used them to warp and composite overlapping photos. 
-        Using our own photos, we recovered their homographies <var>H</var>, applied inverse warping with both nearest-neighbor and bilinear interpolation, 
+        In Part A, I built image mosaics by estimating planar projective transforms and used them to warp and composite overlapping photos. 
+        Using my own photos, I recovered their homographies <var>H</var>, applied inverse warping with both nearest-neighbor and bilinear interpolation, 
         explored rectification, and finally blended the aligned images into seamless mosaics.      
       </p>
       
       <h3 class="subsection-title" id="a1">Part A.1: Shoot the Pictures</h3>
       <p>
-        In this project, I capture overlapping views of a scene and align them using planar homographies. Each image is warped into a shared reference frame and blended to produce a seamless mosaic.
+        To enable projective alignment, I captured two or more overlapping photo sets by rotating the camera in place (fixed center of projection) using my 
+        personal iPhone. I kept shots close in time and targeted ~40–70% overlap between adjacent frames. These image sets serve as inputs for the following 
+        subsections A.2–A.4.      
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/a1_left.jpg" alt="left">
-          <figcaption>Left image (raw).</figcaption>
+          <img src="./media/regent_1.jpg" alt="regent_1">
+          <figcaption>Left image of Regent Street (raw).</figcaption>
         </figure>
         <figure>
-          <img src="./media/a1_right.jpg" alt="right">
-          <figcaption>Right image (raw).</figcaption>
+          <img src="./media/regent_2.jpg" alt="regent_2">
+          <figcaption>Right image of Regent Street (raw).</figcaption>
+        </figure>
+      </div>
+      <div class="grid">
+        <figure>
+          <img src="./media/room1.jpg" alt="room1">
+          <figcaption>Left corner of my room (raw).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/regent2.jpg" alt="room2">
+          <figcaption>Right corner of my room (raw).</figcaption>
         </figure>
       </div>
 
