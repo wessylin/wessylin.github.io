@@ -191,49 +191,20 @@
         constraints after clearing the denominator. I stack these into a <code>2N &times; 9</code> system <var>A</var><var>h</var> = 0 with unknowns 
         <var>h</var> = vec(<var>H</var>).
       </p>
-      <p>
-        Concretely, for each pair, I add the “<var>u</var>” row 
-        <code>[&minus;<var>x</var>, &minus;<var>y</var>, &minus;1, 0, 0, 0, <var>u</var><var>x</var>, <var>u</var><var>y</var>, <var>u</var>]</code> 
-        and the “<var>v</var>” row 
-        <code>[0, 0, 0, &minus;<var>x</var>, &minus;<var>y</var>, &minus;1, <var>v</var><var>x</var>, <var>v</var><var>y</var>, <var>v</var>]</code>. 
-        I build these rows efficiently with vectorized slices so every other row corresponds to the same point.
-      </p>
-      <p>
-        Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
-        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
-        and good spatial coverage, both of which are important for numerical stability. 
-      </p>
-      <p>
-        I use no normalization here. In practice, adding Hartley normalization or RANSAC improves robustness, but for this part, the plain DLT with <var>N</var> &ge; 4 clean, 
-        well-distributed correspondences recovers a valid <var>H</var> and clearly demonstrates the setup, system <var>A</var><var>h</var> = 0, and final matrix. We will, however, 
-        explore normalization later in this project. 
-      </p>
 
-            
-      <!-- =========================
-           A.2 Data & Results (Aligned Boxes)
-      ========================== -->
-      
-      <!-- Correspondences (now in a code box like the matrices) -->
-      <p><strong>Correspondences</strong> <code>(A → B)</code></p>
-      <pre><code>#   (x, y)              (u, v)
-    1   (766.70, 610.32)    (127.50, 540.08)
-      2   (888.38, 655.69)    (274.08, 612.34)
-      3   (750.20, 855.74)    (82.08, 822.92)
-      4   (876.01, 890.80)    (257.56, 866.27)
-      5   (725.45, 1072.29)   (53.18, 1074.79)
-      6   (911.07, 1074.35)   (292.66, 1072.73)
-      7   (1168.86, 738.19)   (600.27, 713.50)
-      8   (1597.83, 659.82)   (994.60, 661.89)</code></pre>
-      
       <p><strong>System size</strong>: <code>A ∈ ℝ<sup>16×9</sup></code> (two rows per correspondence)</p>
       
-      <!-- Example A rows (pair 1) -->
-      <p><strong>A rows</strong> <code>(pair 1)</code></p>
-      <pre><code>u-row: [-766.7000, -610.3194, -1, 0, 0, 0,  97754.2500,  77815.7177, 127.5000] · h = 0
-    v-row: [0, 0, 0, -766.7000, -610.3194, -1, 414079.8306, 329621.6709, 540.0806] · h = 0</code></pre>
+      <p><strong>Correspondences</strong> <code>(A → B)</code></p>
+      <pre><code>#   (x, y)              (u, v)
+    Point 1:   (766.70, 610.32)    (127.50, 540.08)
+    Point 2:   (888.38, 655.69)    (274.08, 612.34)
+    Point 3:   (750.20, 855.74)    (82.08, 822.92)
+    Point 4:   (876.01, 890.80)    (257.56, 866.27)
+    Point 5:   (725.45, 1072.29)   (53.18, 1074.79)
+    Point 6:   (911.07, 1074.35)   (292.66, 1072.73)
+    Point 7:   (1168.86, 738.19)   (600.27, 713.50)
+    Point 8:   (1597.83, 659.82)   (994.60, 661.89)</code></pre>
       
-      <!-- Full A (kept inside details; lines are flush-left to avoid weird indenting) -->
       <details>
         <summary><strong>Full matrix A</strong> <code>(rounded to 4 decimals)</code></summary>
         <pre><code>[[   -766.7       -610.3194      -1.           0.           0.           0.       97754.25     77815.7177     127.5   ]
@@ -254,13 +225,35 @@
      [      0.           0.           0.       -1597.8333    -659.8161      -1.     1057585.2661  436723.782      661.8871]]</code></pre>
       </details>
       
+      <p>
+        Concretely, for each pair, I add the “<var>u</var>” row 
+        <code>[&minus;<var>x</var>, &minus;<var>y</var>, &minus;1, 0, 0, 0, <var>u</var><var>x</var>, <var>u</var><var>y</var>, <var>u</var>]</code> 
+        and the “<var>v</var>” row 
+        <code>[0, 0, 0, &minus;<var>x</var>, &minus;<var>y</var>, &minus;1, <var>v</var><var>x</var>, <var>v</var><var>y</var>, <var>v</var>]</code>. 
+        I build these rows efficiently with vectorized slices so every other row corresponds to the same point.
+      </p>
+      <p>
+        Because <var>A</var><var>h</var> = 0 is homogeneous, I solve for the right singular vector of <var>A</var> with the smallest singular value (via SVD), reshape it to 3&times;3, 
+        and fix the scale by setting <code>H<sub>33</sub> &approx; 1</code>. I then visualize the clicked points side-by-side with connecting lines to confirm consistent ordering 
+        and good spatial coverage, both of which are important for numerical stability. 
+      </p>
+
+      <!-- Example A rows (pair 1) -->
+      <p><strong>A rows</strong> <code>(pair 1)</code></p>
+      <pre><code>u-row: [-766.7000, -610.3194, -1, 0, 0, 0,  97754.2500,  77815.7177, 127.5000] · h = 0
+    v-row: [0, 0, 0, -766.7000, -610.3194, -1, 414079.8306, 329621.6709, 540.0806] · h = 0</code></pre>
+      
       <!-- Homography -->
       <p><strong>Homography</strong> <code>H</code> <code>(scaled so H[2,2] ≈ 1)</code></p>
       <pre><code>[ 1.920604  -0.044450 -1279.934283]
     [ 0.424871   1.573638  -544.629674]
-    [ 0.000482  -0.000004     1.000000]</code></pre>
-      
-            
+    [ 0.000482  -0.000004     1.000000]</code></pre>  
+
+      <p>
+        I use no normalization here. In practice, adding Hartley normalization or RANSAC improves robustness, but for this part, the plain DLT with <var>N</var> &ge; 4 clean, 
+        well-distributed correspondences recovers a valid <var>H</var> and clearly demonstrates the setup, system <var>A</var><var>h</var> = 0, and final matrix. We will, however, 
+        explore normalization later in this project. 
+      </p>
             
       <!-- Correspondence visuals -->
       <div class="grid">
