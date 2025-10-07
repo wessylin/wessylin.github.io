@@ -274,11 +274,56 @@
         </figure>
       </div>
       
-      <h3 class="subsection-title" id="a3">Part A.3: Warp the Images</h3>
+      <h3 class="subsection-title">Part A.3: Warp the Images</h3>
       <p>
-        I performed <em>inverse warping</em> by mapping each output pixel back through <code>H^{-1}</code> to source coordinates and sampling with bilinear interpolation. The output canvas bounds were determined by transforming the source corners and taking the axis-aligned hull.
+        In Part A.3, I warp a source image into a reference frame using the homography <var>H</var> estimated in A.2.
+        I use inverse mapping: for every pixel center <code>(x, y)</code> in the destination grid, I compute the corresponding
+        source coordinate by applying <code>H<sup>−1</sup></code> and then sample the source at that sub-pixel location.
+        Inverse mapping is important because it guarantees every output pixel knows where to pull data from, which avoids
+        the holes you get with forward splatting.
       </p>
+      <p>
+        For the output canvas, there are two cases. When warping into a reference image, I simply adopt the reference image’s
+        height and width as the destination grid. For free warps (no fixed reference), I first project the four corners of the
+        source image through <var>H</var> and take the integer bounding box of those projected corners to define the canvas,
+        so nothing gets cropped. I generate a full meshgrid of destination pixel centers, transform them with
+        <code>H<sup>−1</sup></code> to obtain floating-point <code>(x<sub>s</sub>, y<sub>s</sub>)</code> in the source, and keep
+        a boolean valid mask for samples that lie inside the source bounds (useful later for blending). All images are coerced
+        to RGB: grayscale is stacked to three channels and RGBA drops the alpha channel for consistent math.
+      </p>
+      <p>
+        I implemented two interpolation methods from scratch. <strong>Nearest neighbor</strong> rounds
+        <code>(x<sub>s</sub>, y<sub>s</sub>)</code> to the closest integer and copies that pixel value. It is extremely fast
+        and preserves sharp transitions, but it introduces jagged, stair-stepped edges on diagonals and thin structures.
+        <strong>Bilinear interpolation</strong> computes the four neighboring pixels around <code>(x<sub>s</sub>, y<sub>s</sub>)</code>
+        and blends them with weights derived from the sub-pixel offsets. This produces a smoother, more faithful resampling at
+        a small computational cost and with a touch of blur, which is generally a better trade-off for mosaicing and rectification.
+      </p>
+
       <div class="grid">
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
+      </div>
+      
+      <div class="grid">
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
         <figure>
           <img src="./media/a3_warped.jpg" alt="warped">
           <figcaption>Warped image in the destination frame.</figcaption>
