@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 3: [Auto]Stitching Photo Mosaics</title>
+  <style>
+    :root {
+      --sidebar-w: 200px;
+      --border: #ddd;
+      --text: #000;
+      --muted: #555;
+      --bg: #fff;
+      --bg-soft: #fafafa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      display: flex;
+    }
 
+    /* Sidebar (match Project 2) */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      flex-shrink: 0;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+    }
+    .brand { font-size: 16px; font-weight: 700; padding: 0 20px 8px; }
+    .nav { list-style: none; margin: 0; padding: 8px 0; }
+    .nav a {
+      display: block; padding: 10px 20px;
+      text-decoration: none; color: #000;
+    }
+    .nav a:hover, .nav a.active { background: #000; color: #fff; }
+
+    /* Main (centered content) */
+    .container {
+      margin-left: var(--sidebar-w);
+      padding: 40px;
+      max-width: 1000px;
+      width: calc(100% - var(--sidebar-w));
+      margin-right: auto;
+    }
+    h1 { margin-top: 0; text-align: center; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* Section headings with left rule */
+    .section-title {
+      margin-top: 30px;
+      border-left: 4px solid #000;
+      padding-left: 10px;
+      font-weight: bold;
+    }
+
+    /* Subsection title */
+    .subsection-title {
+      margin-top: 22px;
+      border-left: 3px solid #000;
+      padding-left: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    p { margin: 12px 0; font-size: 16px; }
+
+    /* Reusable figure grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;             /* tighter like proj2 */
+      margin: 16px 0 8px;
+    }
+    figure { margin: 0; text-align: center; }
+    figure img, figure video {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 360px;
+      object-fit: cover;
+    }
+    figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+    /* Code/pre blocks */
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 12px;
+      overflow: auto;
+      font-size: 14px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px; padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 14px; text-align: center;
+    }
+
+    /* Mobile */
+    @media (max-width: 680px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .container { margin-left: 0; padding: 18px 16px; max-width: 100%; width: 100%; }
+      figure img, figure video { max-height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Wesley Lin</div>
+    <nav>
+      <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../proj0/index.html">Project 0</a></li>
+        <li><a href="../proj1/index.html">Project 1</a></li>
+        <li><a href="../proj2/index.html">Project 2</a></li>
+        <li><a class="active" href="./index.html">Project 3</a></li>
+        <li><a href="../proj4/index.html">Project 4</a></li>
+        <li><a href="../proj5/index.html">Project 5</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="container">
+    <h1>Project 3: [Auto]Stitching Photo Mosaics</h1>
+    <hr />
+
+    <!-- ================================
+         Part A: Image Warping & Mosaicing
+    ================================= -->
+    <section>
+      <h2 class="section-title">Part A: Image Warping and Mosaicing</h2>
+
+      <h3 class="subsection-title" id="overview">Overview</h3>
+      <p>
+        In this project, I capture overlapping views of a scene and align them using planar homographies. Each image is warped into a shared reference frame and blended to produce a seamless mosaic.
+      </p>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/sample_inputs.png" alt="sample_inputs">
+          <figcaption>Example input pair with ~40–60% overlap.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="a1">Part A.1: Shoot the Pictures</h3>
+      <p>
+        I shot images from a fixed center of projection (rotate the camera in place) to approximate a planar scene and reduce parallax. I ensured sufficient overlap and consistent exposure.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/a1_left.jpg" alt="left">
+          <figcaption>Left image (raw).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a1_right.jpg" alt="right">
+          <figcaption>Right image (raw).</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="a2">Part A.2: Recover Homographies</h3>
+      <p>
+        Using manually selected correspondences, I solved for the projective transform <code>H</code> with a normalized DLT least-squares system.
+      </p>
+      <pre><code>// Build A h = 0 from N ≥ 4 point pairs, solve via SVD (min singular vector). Normalize points for stability.
+// H is 3×3 up to scale; enforce H[2,2]=1 for display.
+      </code></pre>
+      <div class="grid">
+        <figure>
+          <img src="./media/a2_points_src.jpg" alt="points_src">
+          <figcaption>Selected correspondences (source).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a2_points_dst.jpg" alt="points_dst">
+          <figcaption>Selected correspondences (destination).</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="a3">Part A.3: Warp the Images</h3>
+      <p>
+        I performed <em>inverse warping</em> by mapping each output pixel back through <code>H^{-1}</code> to source coordinates and sampling with bilinear interpolation. The output canvas bounds were determined by transforming the source corners and taking the axis-aligned hull.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/a3_warped.jpg" alt="warped">
+          <figcaption>Warped image in the destination frame.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="a4">Part A.4: Blend the Images into a Mosaic</h3>
+      <p>
+        I composited warped images on a shared canvas using feather blending within overlap regions. Optionally, multi-band (Laplacian pyramid) blending further reduces visible seams.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/a4_mask.png" alt="mask">
+          <figcaption>Feather mask preview (brighter = higher weight).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/a4_mosaic.jpg" alt="mosaic">
+          <figcaption>Final stitched mosaic.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- (Optional) Reflection / Notes -->
+    <section>
+      <h2 class="section-title">Reflection</h2>
+      <p>
+        Notes on challenges, failure cases (parallax/rolling shutter), and potential improvements (RANSAC for outliers, exposure compensation, multiband blending).
+      </p>
+    </section>
+
+    <div class="footer">© 2025 Wesley Lin</div>
+  </main>
+</body>
+</html>
