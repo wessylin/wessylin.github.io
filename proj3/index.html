@@ -278,14 +278,13 @@
           <figcaption>Selected correspondences (right).</figcaption>
         </figure>
       </div>
+      <div class="grid">
+        <figure>
+          <img src="./media/room_mapped.jpg" alt="room_mapped">
+          <figcaption>Selected correspondences mapped.</figcaption>
+        </figure>
+      </div>
       
-      <hr />      
-      
-
-      
-
-
-
       <h3 class="subsection-title" id="a3">Part A.3: Warp the Images</h3>
       <p>
         I performed <em>inverse warping</em> by mapping each output pixel back through <code>H^{-1}</code> to source coordinates and sampling with bilinear interpolation. The output canvas bounds were determined by transforming the source corners and taking the axis-aligned hull.
