@@ -223,7 +223,7 @@
       
       
       <p><strong>Correspondences</strong>: <code>(A → B)</code></p>
-      <pre><code>#                      (x, y)              (u, v)
+      <pre><code>#                       (x, y)              (u, v)
         Point 1:   (766.70, 610.32)    (127.50, 540.08)
         Point 2:   (888.38, 655.69)    (274.08, 612.34)
         Point 3:   (750.20, 855.74)    (82.08, 822.92)
@@ -318,7 +318,7 @@
       <div class="grid">
         <figure>
           <img src="./media/regent_original.jpg" alt="regent_original">
-          <figcaption>Original image: regent street</figcaption>
+          <figcaption>Original image: Regent Street</figcaption>
         </figure>
         <figure>
           <img src="./media/regent_nearest.jpg" alt="regent_nearest">
@@ -334,14 +334,49 @@
       <p>
         I composited warped images on a shared canvas using feather blending within overlap regions. Optionally, multi-band (Laplacian pyramid) blending further reduces visible seams.
       </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/a4_mask.png" alt="mask">
-          <figcaption>Feather mask preview (brighter = higher weight).</figcaption>
+          <img src="./media/room_original.jpg" alt="room_original">
+          <figcaption>Original image: right corner of my room.</figcaption>
         </figure>
         <figure>
-          <img src="./media/a4_mosaic.jpg" alt="mosaic">
-          <figcaption>Final stitched mosaic.</figcaption>
+          <img src="./media/room_reference.jpg" alt="room_reference">
+          <figcaption>Reference frame: right corner of my room.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/room_mosaic.jpg" alt="room_mosaic">
+          <figcaption>Blended image: mosaic.</figcaption>
+        </figure>
+      </div>
+      
+      <div class="grid">
+        <figure>
+          <img src="./media/regent_original.jpg" alt="regent_original">
+          <figcaption>Original image: Regent Street</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/regent_nearest.jpg" alt="regent_reference">
+          <figcaption>Reference frame: Regent Street.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/regent_mosaic.jpg" alt="regent_mosaic">
+          <figcaption>Blended image: mosaic.</figcaption>
+        </figure>
+      </div>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/park_original.jpg" alt="park_original">
+          <figcaption>Original image: People's Park</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/park_nearest.jpg" alt="park_nearest">
+          <figcaption>Nearest Neighbor: People's Park.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/regent_bilinear.jpg" alt="regent_bilinear">
+          <figcaption>Blended image: mosaic.</figcaption>
         </figure>
       </div>
     </section>
