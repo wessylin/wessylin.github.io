@@ -330,10 +330,33 @@
         </figure>
       </div>
 
-      <h3 class="subsection-title" id="a4">Part A.4: Blend the Images into a Mosaic</h3>
+      <h3 class="subsection-title">Part A.4: Blend the Images into a Mosaic</h3>
+      
       <p>
-        I composited warped images on a shared canvas using feather blending within overlap regions. Optionally, multi-band (Laplacian pyramid) blending further reduces visible seams.
+        In Part A.4 I blend the warped source with the reference into a seamless mosaic on a <strong>union canvas</strong>.
+        I first reuse the homography <var>H</var> (from A.2) and project the source corners into the reference frame.
+        The bounding box over those points and the reference defines a larger canvas so the reference lands at a known location.
       </p>
+      
+      <p>
+        I then inverse-warp the source onto this union grid. For each union pixel, I convert to reference coordinates
+        (subtract the offset), apply <code>H<sup>−1</sup></code> to get <code>(x<sub>s</sub>, y<sub>s</sub>)</code>,
+        and sample the source with my from-scratch bilinear interpolator. This yields a warped RGB image and a binary valid mask.
+        I also paste the reference image into the same canvas and create its hard mask.
+      </p>
+      
+      <p>
+        For compositing, I use feather blending with soft masks. I blur each hard mask with a Gaussian to get weights that are ~1
+        in the interior and decay at the edges, then compute:
+      </p>
+      
+      <pre><code>blend = (w_A · A + w_B · B) / (w_A + w_B + ε)</code></pre>
+      
+      <p>
+        This suppresses seams and small misalignments. The blending results were clear and consistent, so there was no need to
+        implement a Laplacian pyramid.
+      </p>
+
       
       <div class="grid">
         <figure>
