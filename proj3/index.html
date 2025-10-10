@@ -403,6 +403,104 @@
         </figure>
       </div>
     </section>
+    
+    <!-- ================================
+         Part B: Feature Matching for Autostitching
+    ================================ -->
+    <section>
+      <h2 class="section-title">Part B: Feature Matching for Autostitching</h2>
+    
+      <!-- =========================
+           B.1: Corner Detection
+      ========================== -->
+      <h3 class="subsection-title" id="b1">B.1: Detecting Corner Features</h3>
+      <p>
+        We detect repeatable interest points using a corner detector (e.g., Harris/ANMS). The goal is to produce a
+        sparse, well-distributed set of high-quality keypoints that are stable to small geometric and photometric changes.
+        I compute a response map, suppress non-maxima within a radius, and keep the top <code>K</code> corners.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/b1_response_map.jpg" alt="corner_response_map">
+          <figcaption>Corner response visualized.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/b1_keypoints_overlaid.jpg" alt="keypoints_overlaid">
+          <figcaption>Top keypoints after non-maximum suppression.</figcaption>
+        </figure>
+      </div>
+    
+      <!-- =========================
+           B.2: Feature Descriptors
+      ========================== -->
+      <h3 class="subsection-title" id="b2">B.2: Feature Descriptors</h3>
+      <p>
+        For each keypoint, I extract a local, normalized patch descriptor that is robust to small shifts/brightness
+        changes. Patches are pre-smoothed, sampled in a fixed window (e.g., <code>40&times;40</code> downsampled to
+        <code>8&times;8</code>), then normalized (zero-mean, unit-variance) so Euclidean distance approximates
+        similarity.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/b2_patches.jpg" alt="descriptor_patches">
+          <figcaption>Example keypoint patches (pre-normalization).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/b2_descriptor_grid.jpg" alt="descriptor_grid">
+          <figcaption>Descriptors visualized as small grayscale grids.</figcaption>
+        </figure>
+      </div>
+    
+      <!-- =========================
+           B.3: Descriptor Matching
+      ========================== -->
+      <h3 class="subsection-title" id="b3">B.3: Matching Descriptors</h3>
+      <p>
+        I match descriptors across images using nearest-neighbor search in descriptor space and apply the
+        Lowe-style ratio test (<code>d1/d2 &lt; τ</code>) to reject ambiguous matches. The result is a set of
+        putative correspondences <code>(x, y) \u2194 (u, v)</code> suitable for robust model fitting.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/b3_matches_all.jpg" alt="all_matches">
+          <figcaption>Putative matches before outlier rejection.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/b3_matches_ratio.jpg" alt="ratio_pruned_matches">
+          <figcaption>Matches after the ratio test (cleaner, fewer outliers).</figcaption>
+        </figure>
+      </div>
+    
+      <!-- =========================
+           B.4: Robust Homography (RANSAC)
+      ========================== -->
+      <h3 class="subsection-title" id="b4">B.4: Robust Homography with RANSAC</h3>
+      <p>
+        From putative matches, I estimate a projective transform using <code>RANSAC</code>. On each iteration:
+        sample 4 correspondences, compute <code>H</code> (DLT), count inliers under a symmetric reprojection
+        threshold, and keep the model with the most inliers. I then refit <code>H</code> on all inliers and
+        proceed to warp/blend as in Parts A.3–A.4 for an autostitched mosaic.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/b4_inliers.jpg" alt="ransac_inliers">
+          <figcaption>RANSAC inliers highlighted; outliers suppressed.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/b4_autostitch.jpg" alt="autostitched_mosaic">
+          <figcaption>Final autostitched mosaic using robust <code>H</code>.</figcaption>
+        </figure>
+      </div>
+    
+      <!-- Optional: quick parameter summary box -->
+      <h3 class="subsection-title">Notes &amp; Parameters</h3>
+      <pre><code>Corner detector: Harris + ANMS (top K)
+    Descriptor:     normalized patch (e.g., 8×8)
+    Matching:       L2 + ratio test (τ ≈ 0.6–0.8)
+    RANSAC:         4-point DLT, ε (px) threshold, N iters
+    Refinement:     Refit H on inliers; warp + feather blend</code></pre>
+    </section>
+
 
     <div class="footer">© 2025 Wesley Lin</div>
   </main>
