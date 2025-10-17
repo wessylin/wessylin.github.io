@@ -448,19 +448,36 @@
       ========================== -->
       <h3 class="subsection-title" id="b2">B.2: Feature Descriptors</h3>
       <p>
-        For each keypoint, I extract a local, normalized patch descriptor that is robust to small shifts/brightness
-        changes. Patches are pre-smoothed, sampled in a fixed window (e.g., <code>40&times;40</code> downsampled to
-        <code>8&times;8</code>), then normalized (zero-mean, unit-variance) so Euclidean distance approximates
-        similarity.
+        After detecting stable corners with Harris + ANMS, the next step was to describe what each of those corners actually looks like. For that, 
+        I implemented a simple but effective axis-aligned feature descriptor that turns a 40×40 region around each corner into a compact 8×8 representation.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/b2_patches.jpg" alt="descriptor_patches">
-          <figcaption>Example keypoint patches (pre-normalization).</figcaption>
+          <img src="./media/park_features.jpg" alt="park_features">
+          <figcaption>5 selected keypoints from the image of People's Park.</figcaption>
+        </figure>
+      </div>
+      <p>
+        The idea is to capture enough local context to make features recognizable between images, but not so much that they become sensitive to noise or lighting. 
+        For every keypoint, I first extract a 40×40 grayscale patch centered on it. I then apply a small Gaussian blur (<code>σ ≈ 2</code>) to smooth out noise 
+        and make the descriptor robust to tiny pixel shifts or illumination changes.
+      </p>
+      <p>
+        Next, I downsampled the blurred patch from 40×40 to 8×8 using strict area averaging, where each 8×8 cell summarizes a 5×5 region from the original patch. 
+        Finally, I bias-gain normalize each descriptor by subtracting the mean, divided by the standard deviation, and performing a final L2 normalization. 
+        This makes the descriptors invariant to lighting and contrast differences.
+      </p>
+      <p>
+        Each corner now becomes a 64-dimensional feature vector that encodes its local structure in a consistent, comparable way. 
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/park_patches.jpg" alt="park_patches">
+          <figcaption>Corresponding blurred 40x40 patches of the selected points.</figcaption>
         </figure>
         <figure>
-          <img src="./media/b2_descriptor_grid.jpg" alt="descriptor_grid">
-          <figcaption>Descriptors visualized as small grayscale grids.</figcaption>
+          <img src="./media/park_descriptors.jpg" alt="park_descriptors">
+          <figcaption>8x8 descriptors of the selected points.</figcaption>
         </figure>
       </div>
     
