@@ -488,18 +488,26 @@
       ========================== -->
       <h3 class="subsection-title" id="b3">B.3: Matching Descriptors</h3>
       <p>
-        I match descriptors across images using nearest-neighbor search in descriptor space and apply the
-        Lowe-style ratio test (<code>d1/d2 &lt; τ</code>) to reject ambiguous matches. The result is a set of
-        putative correspondences <code>(x, y) \u2194 (u, v)</code> suitable for robust model fitting.
+        With our corner points and 8×8 descriptors ready, the next step was to connect matching features between two overlapping images. 
+        I started by computing the pairwise Euclidean distances between all descriptors from the left (reference) and right (target) frames to 
+        measure visual similarity.
+      </p>
+      <p>
+        To ensure reliable matches, I used Lowe’s ratio test, a method introduced in SIFT (scale invariant feature transform). For each feature, 
+        I compared its best and second-best matches in the other image and only kept those where the distance ratio was below 0.75. This filters 
+        out ambiguous points that don’t have a clearly unique correspondence.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/b3_matches_all.jpg" alt="all_matches">
-          <figcaption>Putative matches before outlier rejection.</figcaption>
+          <img src="./media/park_matched.jpg" alt="park_matched">
+          <figcaption>120 matched descriptors from the reference (left) and target (right) frames of People's Park.</figcaption>
         </figure>
+      <p>  
+      </p>
+      <div class="grid">
         <figure>
-          <img src="./media/b3_matches_ratio.jpg" alt="ratio_pruned_matches">
-          <figcaption>Matches after the ratio test (cleaner, fewer outliers).</figcaption>
+          <img src="./media/park_matched_filtered.jpg" alt="park_matched_filtered">
+          <figcaption>20 filtered matching descriptors in the overlapping regions of the two images.</figcaption>
         </figure>
       </div>
     
