@@ -415,18 +415,31 @@
       ========================== -->
       <h3 class="subsection-title" id="b1">B.1: Detecting Corner Features</h3>
       <p>
-        We detect repeatable interest points using a corner detector (e.g., Harris/ANMS). The goal is to produce a
-        sparse, well-distributed set of high-quality keypoints that are stable to small geometric and photometric changes.
-        I compute a response map, suppress non-maxima within a radius, and keep the top <code>K</code> corners.
+        To kick off feature detection, I implemented a Harris corner detector to find distinctive points in an image—those that change sharply
+        in both directions, like building corners or patterned edges. After converting each image to a clean grayscale float array (with automatic 
+        handling for RGB and RGBA images), I computed the Harris response map using a Gaussian scale of 1.5 to smooth out noise. Local maxima in 
+        that response map represent potential corners, so I extracted them with <code>peak_local_max</code>, applied a small threshold to remove weak
+        detections, and then discarded any points too close to the borders. The result was a dense set of high-quality Harris points—often clustering 
+        around strong textures or repetitive patterns.
+      </p>
+      <p>
+        To make those features more spatially balanced, I added Adaptive Non-Maximal Suppression (ANMS). Instead of keeping every strong corner, 
+        ANMS finds the distance from each point to its nearest significantly stronger neighbor and keeps only the top 500 with the largest radii. 
+        This effectively spreads out the detections while preserving the strongest ones.
+      </p>
+      <p>
+        In practice, the difference is clear: the raw Harris map produces many overlapping detections in textured areas, whereas the ANMS-filtered 
+        result keeps a uniform, visually pleasing set of corner features that cover the scene evenly—ideal for the later steps in matching and homography 
+        estimation.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/b1_response_map.jpg" alt="corner_response_map">
-          <figcaption>Corner response visualized.</figcaption>
+          <img src="./media/park_harris.jpg" alt="park_harris">
+          <figcaption>All Harris corners detected on the image of People's Park.</figcaption>
         </figure>
         <figure>
-          <img src="./media/b1_keypoints_overlaid.jpg" alt="keypoints_overlaid">
-          <figcaption>Top keypoints after non-maximum suppression.</figcaption>
+          <img src="./media/park_anms.jpg" alt="park_anms">
+          <figcaption>Corners on People's Park after ANMS.</figcaption>
         </figure>
       </div>
     
