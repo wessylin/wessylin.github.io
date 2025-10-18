@@ -533,19 +533,60 @@
         With this robust transformation, we reused our Part A utilities (<code>main_warp.py</code> and <code>main_blend.py</code>) to warp and align the images onto a shared canvas. 
         The overlapping regions were then softly combined using Gaussian feather blending to produce both uncropped and cropped mosaics.
       </p>
+      <div class="grid">
+        <figure>
+          <figure>
+          <img src="./media/balcony_1.jpg" alt="balcony_1">
+          <figcaption>Source frame of my balcony (left).</figcaption>
+        </figure>
+          <img src="./media/balcony_2.jpg" alt="balcony_2">
+          <figcaption>Reference frame of my balcony (right).</figcaption>
+        </figure>
+      </div>
+      <div class="grid">
+        <figure>
+          <figure>
+          <img src="./media/balcony_matches.jpg" alt="balcony_matches">
+          <figcaption>Manual stitching using pre-selected points: My Balcony.</figcaption>
+        </figure>
+          <img src="./media/balcony_ransac.jpg" alt="balcony_ransac">
+          <figcaption>Automatic stitching using feature detection and RANSAC: My Balcony.</figcaption>
+        </figure>
+      </div>
       <p>
         The automatic RANSAC mosaic looked slightly less sharp than the manually stitched version, but that’s expected — the manual approach uses precisely chosen points, 
         while RANSAC achieves comparable results automatically in a fraction of the time. In short, this stage unified everything we built so far into a fully automated
         panorama system that balances accuracy with efficiency.
       </p>
+
       <div class="grid">
         <figure>
-          <img src="./media/b4_inliers.jpg" alt="ransac_inliers">
-          <figcaption>RANSAC inliers highlighted; outliers suppressed.</figcaption>
+          <img src="./media/park_ransac.jpg" alt="park_ransac">
+          <figcaption>Automatic stitching using feature detection and RANSAC: People's Park.</figcaption>
         </figure>
         <figure>
-          <img src="./media/b4_autostitch.jpg" alt="autostitched_mosaic">
-          <figcaption>Final autostitched mosaic using robust <code>H</code>.</figcaption>
+          <img src="./media/park_union.jpg" alt="park_union">
+          <figcaption>Manual stitching using pre-selected points: People's Park.</figcaption>
+        </figure>
+      </div>
+      <div class="grid">
+        <figure>
+          <img src="./media/regent_ransac.jpg" alt="regent_ransac">
+          <figcaption>Automatic stitching using feature detection and RANSAC: Regent Street.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/regent_union.jpg" alt="regent_union">
+          <figcaption>Manual stitching using pre-selected points: Regent Street.</figcaption>
+        </figure>
+      </div>
+      <div class="grid">
+        <figure>
+          <img src="./media/room_ransac.jpg" alt="room_ransac">
+          <figcaption>Automatic stitching using feature detection and RANSAC: My Room.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/room_union.jpg" alt="room_union">
+          <figcaption>Manual stitching using pre-selected points: My Room.</figcaption>
         </figure>
       </div>
     
