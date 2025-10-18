@@ -504,7 +504,7 @@
         </figure>
       </div>
       <p> 
-        Since the two frames only overlap horizontally by about 50%, I added a helper function that filters keypoints to only those lying 
+        Since the two frames only overlap horizontally by about 70%, I added a helper function that filters keypoints to only those lying 
         inside the shared region, keeping the right half of the reference image and the left half of the target image. This simple geometric 
         constraint greatly improved accuracy by preventing impossible matches in non-overlapping areas.
       </p>
@@ -554,7 +554,7 @@
         </figure>
       </div>
       <p>
-        The automatic RANSAC mosaic looked slightly less sharp than the manually stitched version, but that’s expected — the manual approach uses precisely chosen points, 
+        The automatic RANSAC mosaics looked slightly less sharp than the manually stitched versions, but that makes sense. The manual approach uses precisely chosen points, 
         while RANSAC achieves comparable results automatically in a fraction of the time. In short, this stage unified everything we built so far into a fully automated
         panorama system that balances accuracy with efficiency.
       </p>
