@@ -521,10 +521,22 @@
       ========================== -->
       <h3 class="subsection-title" id="b4">B.4: Robust Homography with RANSAC</h3>
       <p>
-        From putative matches, I estimate a projective transform using <code>RANSAC</code>. On each iteration:
-        sample 4 correspondences, compute <code>H</code> (DLT), count inliers under a symmetric reprojection
-        threshold, and keep the model with the most inliers. I then refit <code>H</code> on all inliers and
-        proceed to warp/blend as in Parts A.3–A.4 for an autostitched mosaic.
+        For the final step, we automated our mosaic creation using RANSAC and DLT to compute the homography between two overlapping frames robustly.
+      </p>
+      <p>
+        Building on the previous parts, we used Harris corners and ANMS from B.1, 8×8 normalized feature descriptors from B.2, and Lowe’s ratio–filtered 
+        matches from B.3. These correspondences were fed into a RANSAC loop, which repeatedly applied the Direct Linear Transform (DLT) on random 4-point 
+        subsets to estimate candidate homographies. Each candidate was scored by counting inliers—points whose reprojection error stayed below a small 
+        threshold—and the homography with the most consistent matches was refined using all inliers to produce the final, stable H.
+      </p>
+      <p>
+        With this robust transformation, we reused our Part A utilities (main_warp.py and main_blend.py) to warp and align the images onto a shared canvas. 
+        The overlapping regions were then softly combined using Gaussian feather blending to produce both uncropped and cropped mosaics.
+      </p>
+      <p>
+        The automatic RANSAC mosaic looked slightly less sharp than the manually stitched version, but that’s expected — the manual approach uses precisely chosen points, 
+        while RANSAC achieves comparable results automatically in a fraction of the time. In short, this stage unified everything we built so far into a fully automated
+        panorama system that balances accuracy with efficiency.
       </p>
       <div class="grid">
         <figure>
@@ -537,13 +549,6 @@
         </figure>
       </div>
     
-      <!-- Optional: quick parameter summary box -->
-      <h3 class="subsection-title">Notes &amp; Parameters</h3>
-      <pre><code>Corner detector: Harris + ANMS (top K)
-    Descriptor:     normalized patch (e.g., 8×8)
-    Matching:       L2 + ratio test (τ ≈ 0.6–0.8)
-    RANSAC:         4-point DLT, ε (px) threshold, N iters
-    Refinement:     Refit H on inliers; warp + feather blend</code></pre>
     </section>
 
 
