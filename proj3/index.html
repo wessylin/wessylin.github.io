@@ -502,8 +502,13 @@
           <img src="./media/park_matched.jpg" alt="park_matched">
           <figcaption>120 matched descriptors from the reference (left) and target (right) frames of People's Park.</figcaption>
         </figure>
-      <p>  
+      </div>
+      <p> 
+        Since the two frames only overlap horizontally by about 50%, I added a helper function that filters keypoints to only those lying 
+        inside the shared region, keeping the right half of the reference image and the left half of the target image. This simple geometric 
+        constraint greatly improved accuracy by preventing impossible matches in non-overlapping areas.
       </p>
+      
       <div class="grid">
         <figure>
           <img src="./media/park_matched_filtered.jpg" alt="park_matched_filtered">
