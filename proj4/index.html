@@ -74,6 +74,7 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      
       gap: 14px;
       margin: 16px 0 8px;
     }
@@ -241,22 +242,89 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
     ================================ -->
     <section id="part1">
       <h2 class="section-title">Part 1: Fit a Neural Field to a 2D Image</h2>
-      <p>
-        Before full NeRF, I warm up with a coordinate-based MLP that maps 2D pixel coords to RGB, training with
-        <code>L2</code> loss. This establishes the optimization loop and positional encoding.
-      </p>
-      <div class="grid">
-        <figure>
-          <img src="./media/field_target.jpg" alt="target image" />
-          <figcaption>Target 2D image.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/field_recon.jpg" alt="reconstructed image" />
-          <figcaption>Reconstruction from MLP.</figcaption>
-        </figure>
-      </div>
-      <pre><code># pseudo: positional encoding (PE) and MLP forward
-y = MLP( PE([x, y]) )  # → RGB</code></pre>
+        <p>
+          In part 1, we implemented a neural field — a coordinate-based multilayer perceptron (MLP) that learns to represent an image as a continuous function. 
+          Given only 2D pixel coordinates (x,y) normalized to [0,1], the network predicts RGB color values (r,g,b), effectively learning to “paint” the image from scratch. 
+          During training, it gradually reconstructs fine details via gradient-based optimization.
+        </p>
+        
+        <div class="grid">
+          <figure>
+            <img src="./media/default_model.jpg" alt="defaul_model" />
+            <figcaption>Our default model architecture.</figcaption>
+          </figure>
+        </div>
+
+        <p> 
+          Our default architecture uses 3 hidden layers, each with 128 neurons, and a maximum PE frequency of L = 10. Training ran for 3,000 iterations with a batch size of 
+          10,000 random pixels per step. 
+        </p> 
+        
+        <p>
+          We saved reconstructions at iterations 0, 500, 1000, 1500, 2000, 2500, and 3000 to visualize progression. The model quickly captured coarse colors and shapes, then 
+          refined textures and edges, converging to a near-perfect reconstruction around 2,500 iterations. We observed similar behavior on both the provided test image and a custom image, 
+          confirming the method’s generality.
+        </p>
+
+        <div class="grid">
+          <figure>
+            <img src="./media/fox_truth.jpg" alt="fox_truth" />
+            <figcaption>The ground truth image of our Fox.</figcaption>
+          </figure>
+          <figure>
+            <img src="./media/beetle_truth.jpg" alt="beetle_truth" />
+            <figcaption>The ground truth image of our Beetle car.</figcaption>
+          </figure>
+        </div>
+      
+        <div class="grid">
+          <figure>
+            <img src="./media/fox_progression.jpg" alt="fox_progression" />
+            <figcaption>The reconstruction progression of our Fox image.</figcaption>
+          </figure>
+          <figure>
+            <img src="./media/beetle_progression.jpg" alt="beetle_progression" />
+            <figcaption> The reconstruction progression of our Beetle car.</figcaption>
+          </figure>
+        </div>
+      
+        <p>
+          To study the effect of model capacity and frequency encoding, we trained four variants:
+        </p>
+
+        <div class="grid">
+          <figure>
+            <img src="./media/fox_grid.jpg" alt="fox_grid" />
+            <figcaption>Fox image training variants.</figcaption>
+          </figure>
+          <figure>
+            <img src="./media/beetle_grid.jpg" alt="beetle_grid" />
+            <figcaption>Beetle car training variants.</figcaption>
+          </figure>
+        </div>
+      
+        <p>
+          The 2×2 grid of final results showed that increasing the PE frequency L enhances sharpness and fine detail, but can introduce high-frequency artifacts. 
+          Wider models generally achieved higher fidelity, though improvements diminished beyond 256 neurons. These patterns highlight how positional encoding and width 
+          jointly control the balance between smoothness, realism, and overfitting.
+        </p>
+
+        <p>
+          We also tracked the Peak Signal-to-Noise Ratio (PSNR) throughout training for the default setup. The PSNR increased steeply over the first 1,000 iterations, reaching 25+ dB as the model converged. 
+          The curve closely matched the visual progression—rapid improvement in the first 1,000 iterations, then gradual refinement toward convergence.
+        </p>
+
+        <div class="grid">
+          <figure>
+            <img src="./media/fox_psnr.jpg" alt="fox_psnr" />
+            <figcaption>The PSNR curve of the Fox image throughout training.</figcaption>
+          </figure>
+          <figure>
+            <img src="./media/beetle_psnr.jpg" alt="beetle_psnr" />
+            <figcaption> The PSNR curve of the Beetle car throughout training.</figcaption>
+          </figure>
+        </div>
+
     </section>
 
     <!-- ==========================================
