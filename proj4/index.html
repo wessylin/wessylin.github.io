@@ -1,1 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project 4: Neural Radiance Field</title>
+  <style>
+    :root {
+      --sidebar-w: 200px;
+      --border: #ddd;
+      --text: #000;
+      --muted: #555;
+      --bg: #fff;
+      --bg-soft: #fafafa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      display: flex;
+    }
+
+    /* Sidebar (same as previous project) */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      flex-shrink: 0;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+    }
+    .brand { font-size: 16px; font-weight: 700; padding: 0 20px 8px; }
+    .nav { list-style: none; margin: 0; padding: 8px 0; }
+    .nav a {
+      display: block; padding: 10px 20px;
+      text-decoration: none; color: #000;
+    }
+    .nav a:hover, .nav a.active { background: #000; color: #fff; }
+
+    /* Main (centered content) */
+    .container {
+      margin-left: var(--sidebar-w);
+      padding: 40px;
+      max-width: 1000px;
+      width: calc(100% - var(--sidebar-w));
+      margin-right: auto;
+    }
+    h1 { margin-top: 0; text-align: center; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* Section & subsection */
+    .section-title {
+      margin-top: 30px;
+      border-left: 4px solid #000;
+      padding-left: 10px;
+      font-weight: bold;
+    }
+    .subsection-title {
+      margin-top: 22px;
+      border-left: 3px solid #000;
+      padding-left: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    p { margin: 12px 0; font-size: 16px; }
+
+    /* Reusable figure grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 16px 0 8px;
+    }
+    figure { margin: 0; text-align: center; }
+    figure img, figure video {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 360px;
+      object-fit: cover;
+    }
+    figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+    /* Code/pre blocks */
+    pre {
+      background: #f8f8f8;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 12px;
+      overflow: auto;
+      font-size: 14px;
+    }
+
+    /* Callouts (optional, subtle) */
+    .callout {
+      border: 1px solid var(--border);
+      border-left: 4px solid #000;
+      background: #fafafa;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      margin: 12px 0;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px; padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 14px; text-align: center;
+    }
+
+    /* Mobile */
+    @media (max-width: 680px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .container { margin-left: 0; padding: 18px 16px; max-width: 100%; width: 100%; }
+      figure img, figure video { max-height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Wesley Lin</div>
+    <nav>
+      <ul class="nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../proj0/index.html">Project 0</a></li>
+        <li><a href="../proj1/index.html">Project 1</a></li>
+        <li><a href="../proj2/index.html">Project 2</a></li>
+        <li><a href="../proj3/index.html">Project 3</a></li>
+        <li><a class="active" href="./index.html">Project 4</a></li>
+        <li><a href="../proj5/index.html">Project 5</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="container">
+    <h1>Project 4: Neural Radiance Field</h1>
+    <hr />
+
+    <!-- Optional overview -->
+    <section>
+      <h2 class="section-title" id="overview">Overview</h2>
+      <p>
+        In this project, I implement a Neural Radiance Field (NeRF) pipeline—from camera calibration and dataset prep to
+        ray generation, volumetric sampling, a neural radiance MLP, and volume rendering. I start by building a small
+        neural field for 2D images, then extend to multi-view 3D reconstruction and novel-view synthesis with my own captures.
+      </p>
+      <div class="callout">
+        <strong>Repo layout (placeholder):</strong> <code>data/</code>, <code>scripts/</code>, <code>nerf/</code> (<code>model.py</code>, <code>render.py</code>, <code>rays.py</code>, <code>dataset.py</code>), <code>train.py</code>, <code>eval.py</code>.
+      </div>
+    </section>
+
+    <!-- ===============================
+         Part 0: Calibrating & Scanning
+    ================================ -->
+    <section id="part0">
+      <h2 class="section-title">Part 0: Calibrating Your Camera and Capturing a 3D Scan</h2>
+
+      <h3 class="subsection-title" id="p01">Part 0.1: Calibrating Your Camera</h3>
+      <p>
+        I first estimate intrinsic parameters (<var>K</var>) and lens distortion via a checkerboard sequence. I capture
+        multiple views with sufficient tilt and coverage, then solve for <var>K</var> and distortion coefficients.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/calib_grid_1.jpg" alt="calibration grid sample 1" />
+          <figcaption>Checkerboard sample frame.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/calib_reproj.jpg" alt="reprojection error plot" />
+          <figcaption>Per-view reprojection error (px).</figcaption>
+        </figure>
+      </div>
+      <pre><code># placeholder: show printed intrinsics/distortion
+K =
+[fx   0  cx]
+[ 0  fy  cy]
+[ 0   0   1]
+dist = [k1, k2, p1, p2, k3]</code></pre>
+
+      <h3 class="subsection-title" id="p02">Part 0.2: Capturing a 3D Object Scan</h3>
+      <p>
+        I captured ~[N] images around the object with consistent exposure and fixed focus. The object is centered, with
+        a textured background to aid pose estimation.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/scan_ring.jpg" alt="capture ring" />
+          <figcaption>Capture arc/ring around object.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/scan_contact_sheet.jpg" alt="contact sheet" />
+          <figcaption>Contact sheet of selected frames.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="p03">Part 0.3: Estimating Camera Pose</h3>
+      <p>
+        Using [COLMAP/SfM pipeline placeholder], I recover per-image extrinsics (<var>R</var>, <var>t</var>) and refine intrinsics.
+        I visualize the recovered camera frustums and sparse points to verify coverage.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/sfm_cameras.jpg" alt="sfm camera poses" />
+          <figcaption>Recovered camera poses.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/sfm_sparse.jpg" alt="sparse reconstruction" />
+          <figcaption>Sparse point cloud.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="p04">Part 0.4: Undistorting Images and Creating a Dataset</h3>
+      <p>
+        I undistort each frame with the calibrated parameters and export a NeRF-ready dataset: RGBs, intrinsics <var>K</var>,
+        and per-image poses. I also generate train/val splits and a quick JSON manifest.
+      </p>
+      <pre><code>{
+  "camera_model": "OPENCV",
+  "fl_x": fx, "fl_y": fy,
+  "cx": cx, "cy": cy,
+  "frames": [
+    {"file_path": "images/000.png", "transform_matrix": [...,4x4]},
+    {"file_path": "images/001.png", "transform_matrix": [...,4x4]}
+  ]
+}</code></pre>
+    </section>
+
+    <!-- ===============================
+         Part 1: Neural Field (2D)
+    ================================ -->
+    <section id="part1">
+      <h2 class="section-title">Part 1: Fit a Neural Field to a 2D Image</h2>
+      <p>
+        Before full NeRF, I warm up with a coordinate-based MLP that maps 2D pixel coords to RGB, training with
+        <code>L2</code> loss. This establishes the optimization loop and positional encoding.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/field_target.jpg" alt="target image" />
+          <figcaption>Target 2D image.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/field_recon.jpg" alt="reconstructed image" />
+          <figcaption>Reconstruction from MLP.</figcaption>
+        </figure>
+      </div>
+      <pre><code># pseudo: positional encoding (PE) and MLP forward
+y = MLP( PE([x, y]) )  # → RGB</code></pre>
+    </section>
+
+    <!-- ==========================================
+         Part 2: Neural Radiance Field (Multi-view)
+    =========================================== -->
+    <section id="part2">
+      <h2 class="section-title">Part 2: Fit a Neural Radiance Field from Multi-view Images</h2>
+
+      <h3 class="subsection-title" id="p21">Part 2.1: Create Rays from Cameras</h3>
+      <p>
+        For each pixel, I back-project through intrinsics/extrinsics to form camera-space rays,
+        storing <code>origin</code> and unit <code>direction</code>.
+      </p>
+      <pre><code># rays: r(t) = o + t d,  t ∈ [t_near, t_far]
+o = C
+d = normalize( R · K^{-1} [u, v, 1]^T )</code></pre>
+
+      <h3 class="subsection-title" id="p22">Part 2.2: Sampling</h3>
+      <p>
+        I sample <var>N</var> points per ray via stratified sampling (and optionally hierarchical resampling)
+        within scene bounds [<var>t<sub>near</sub></var>, <var>t<sub>far</sub></var>].
+      </p>
+      <pre><code># stratified sampling
+t_i ~ U[ t_near + iΔ, t_near + (i+1)Δ ]  for i=0..N-1</code></pre>
+
+      <h3 class="subsection-title" id="p23">Part 2.3: Putting the Dataloading All Together</h3>
+      <p>
+        I build a dataset that yields (ray origins, ray dirs, per-ray t-bins) with on-the-fly image indexing,
+        batching, and shuffling across views.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/ray_overlay.jpg" alt="ray overlay" />
+          <figcaption>Ray visualization over image grid.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="p24">Part 2.4: Neural Radiance Field</h3>
+      <p>
+        The NeRF MLP takes 3D points (with positional encoding) and view directions, predicting density <var>σ</var> and color <var>c</var>.
+      </p>
+      <pre><code># forward sketch
+σ, c = NeRF( PE(xyz), PE(dir) )</code></pre>
+
+      <h3 class="subsection-title" id="p25">Part 2.5: Volume Rendering</h3>
+      <p>
+        I alpha-composite samples along each ray using the standard transmittance formulation to produce pixel colors.
+      </p>
+      <pre><code># volume rendering (discrete)
+T_0 = 1
+w_i = T_{i} * (1 - exp(-σ_i Δ_i))
+C = Σ w_i * c_i
+T_{i+1} = T_i * exp(-σ_i Δ_i)</code></pre>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/novel_1.jpg" alt="novel view 1" />
+          <figcaption>Novel-view render 1.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/novel_2.jpg" alt="novel view 2" />
+          <figcaption>Novel-view render 2.</figcaption>
+        </figure>
+        <figure>
+          <video src="./media/novel_orbit.mp4" controls></video>
+          <figcaption>Orbit animation.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="subsection-title" id="p26">Part 2.6: Training with Your Own Data</h3>
+      <p>
+        Finally, I train on my captured dataset, monitor PSNR/SSIM, and render a camera fly-through.
+        I include comparisons between training-view reconstructions and unseen views.
+      </p>
+      <div class="grid">
+        <figure>
+          <img src="./media/train_curves.jpg" alt="training curves" />
+          <figcaption>Training curves (PSNR/SSIM).</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/gt_vs_pred.jpg" alt="gt vs prediction" />
+          <figcaption>GT vs. prediction on held-out views.</figcaption>
+        </figure>
+      </div>
+      <pre><code># training loop (placeholder)
+for step in range(steps):
+    rays = sample_batch()
+    σ, c = nerf(rays.points, rays.dirs)
+    C = volume_render(σ, c, rays.deltas)
+    loss = mse(C, rays.target_rgb)
+    loss.backward(); opt.step(); opt.zero_grad()</code></pre>
+    </section>
+
+    <div class="footer">© 2025 Wesley Lin</div>
+  </main>
+</body>
+</html>
 
