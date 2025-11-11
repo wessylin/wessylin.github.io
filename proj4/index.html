@@ -259,12 +259,6 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
           Our default architecture uses 3 hidden layers, each with 128 neurons, and a maximum PE frequency of L = 10. Training ran for 3,000 iterations with a batch size of 
           10,000 random pixels per step. 
         </p> 
-        
-        <p>
-          We saved reconstructions at iterations 0, 500, 1000, 1500, 2000, 2500, and 3000 to visualize progression. The model quickly captured coarse colors and shapes, then 
-          refined textures and edges, converging to a near-perfect reconstruction around 2,500 iterations. We observed similar behavior on both the provided test image and a custom image, 
-          confirming the method’s generality.
-        </p>
 
         <div class="grid">
           <figure>
@@ -276,18 +270,26 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
             <figcaption>The ground truth image of our Beetle car.</figcaption>
           </figure>
         </div>
+        
+        <p>
+          We saved reconstructions at iterations 0, 500, 1000, 1500, 2000, 2500, and 3000 to visualize progression. The model quickly captured coarse colors and shapes, then 
+          refined textures and edges, converging to a near-perfect reconstruction around 2,500 iterations. We observed similar behavior on both the provided test image and a custom image, 
+          confirming the method’s generality.
+        </p>
       
         <div class="grid">
           <figure>
             <img src="./media/fox_progression.jpg" alt="fox_progression" />
             <figcaption>The reconstruction progression of our Fox image.</figcaption>
           </figure>
+        </div>
+        
+        <div class="grid">
           <figure>
             <img src="./media/beetle_progression.jpg" alt="beetle_progression" />
             <figcaption> The reconstruction progression of our Beetle car.</figcaption>
           </figure>
         </div>
-      
         <p>
           To study the effect of model capacity and frequency encoding, we trained four variants:
         </p>
