@@ -247,7 +247,7 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
         
         <div class="grid">
           <figure>
-            <img src="./media/default_model.jpg" alt="default_model" width="450"/>
+            <img src="./media/default_model.jpg" alt="default_model" />
             <figcaption>Our default model architecture.</figcaption>
           </figure>
         </div>
@@ -259,11 +259,11 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
 
         <div class="grid">
           <figure>
-            <img src="./media/fox_truth.jpg" alt="fox_truth" width="350"/>
+            <img src="./media/fox_truth.jpg" alt="fox_truth" />
             <figcaption>The ground truth image of our Fox.</figcaption>
           </figure>
           <figure>
-            <img src="./media/beetle_truth.jpg" alt="beetle_truth" width="350"/>
+            <img src="./media/beetle_truth.jpg" alt="beetle_truth" />
             <figcaption>The ground truth image of our Beetle car.</figcaption>
           </figure>
         </div>
@@ -334,25 +334,26 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
 
       <h3 class="subsection-title" id="p21">Part 2.1: Create Rays from Cameras</h3>
       <p>
-        For each pixel, I back-project through intrinsics/extrinsics to form camera-space rays,
-        storing <code>origin</code> and unit <code>direction</code>.
+        In this part, I implemented a function to generate rays for every pixel across all camera views. Using the camera intrinsics 𝐾 (focal lengths and optical center) and extrinsics 
+        (rotation 𝑅 and translation 𝑡), I converted 2D pixel coordinates into 3D ray directions. First, I created a pixel grid for each image using torch.meshgrid, and normalized it 
+        using the intrinsic matrix. I then applied the camera-to-world transformation to rotate and translate each direction vector into world coordinates. Each ray was represented as a pair: 
+        its origin (camera center) and unit direction (ray through the pixel). This established the fundamental link between each pixel and its corresponding 3D sampling direction through the scene.
       </p>
-      <pre><code># rays: r(t) = o + t d,  t ∈ [t_near, t_far]
-o = C
-d = normalize( R · K^{-1} [u, v, 1]^T )</code></pre>
 
       <h3 class="subsection-title" id="p22">Part 2.2: Sampling</h3>
       <p>
-        I sample <var>N</var> points per ray via stratified sampling (and optionally hierarchical resampling)
-        within scene bounds [<var>t<sub>near</sub></var>, <var>t<sub>far</sub></var>].
+        Next, I sampled discrete 3D points along each ray to approximate the continuous volume. For each ray, I defined near and far bounds 
+        (the closest and farthest distances along the ray that intersect the scene). I then sampled 𝑁 depth values t_𝑖 between these bounds, 
+        both uniformly and with stratified random jitter for anti-aliasing and better coverage. Each sample position was computed as: x_𝑖 = o + t_𝑖.
+        This produced batches of 3D sample points that could be fed into the NeRF network for color and density evaluation.
       </p>
-      <pre><code># stratified sampling
-t_i ~ U[ t_near + iΔ, t_near + (i+1)Δ ]  for i=0..N-1</code></pre>
 
       <h3 class="subsection-title" id="p23">Part 2.3: Putting the Dataloading All Together</h3>
       <p>
-        I build a dataset that yields (ray origins, ray dirs, per-ray t-bins) with on-the-fly image indexing,
-        batching, and shuffling across views.
+        Here, I integrated the previous steps into a PyTorch dataloader to streamline training. The dataloader loaded all camera poses and corresponding images.
+        For each batch, it randomly selected a subset of images and pixels, generated their rays (Part 2.1), and sampled points along them (Part 2.2). Each batch 
+        returned: ray origins and directions, sampled 3D points, and ground-truth RGB values for each pixel. This made the NeRF training loop modular and efficient, 
+        automatically handling randomization and GPU batching.
       </p>
       <div class="grid">
         <figure>
@@ -363,20 +364,19 @@ t_i ~ U[ t_near + iΔ, t_near + (i+1)Δ ]  for i=0..N-1</code></pre>
 
       <h3 class="subsection-title" id="p24">Part 2.4: Neural Radiance Field</h3>
       <p>
-        The NeRF MLP takes 3D points (with positional encoding) and view directions, predicting density <var>σ</var> and color <var>c</var>.
+        I implemented the NeRF model as a multilayer perceptron that maps 3D positions and viewing directions to color (RGB) and density (σ). 
+        The input coordinates are first passed through a positional encoding layer to capture high-frequency spatial variations. The network 
+        is trained by minimizing the MSE loss between the rendered and real images, learning a continuous volumetric representation of the scene 
+        that can reproduce photorealistic views from unseen angles.
       </p>
-      <pre><code># forward sketch
-σ, c = NeRF( PE(xyz), PE(dir) )</code></pre>
-
+      
       <h3 class="subsection-title" id="p25">Part 2.5: Volume Rendering</h3>
       <p>
-        I alpha-composite samples along each ray using the standard transmittance formulation to produce pixel colors.
+        Finally, I integrated a differentiable volume rendering step to synthesize 2D images from the predicted color and density fields. For each ray, 
+        accumulated transmittance and emission are computed using exponential attenuation, producing the final pixel color through weighted integration 
+        along the ray. This allows gradients to flow through the entire rendering process, enabling end-to-end optimization of the NeRF to 
+        reconstruct the 3D scene accurately.
       </p>
-      <pre><code># volume rendering (discrete)
-T_0 = 1
-w_i = T_{i} * (1 - exp(-σ_i Δ_i))
-C = Σ w_i * c_i
-T_{i+1} = T_i * exp(-σ_i Δ_i)</code></pre>
 
       <div class="grid">
         <figure>
@@ -421,4 +421,3 @@ for step in range(steps):
   </main>
 </body>
 </html>
-
