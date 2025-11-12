@@ -372,6 +372,13 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
         The input coordinates are first passed through a positional encoding layer to capture high-frequency spatial variations. The network 
         is trained by minimizing the MSE loss between the rendered and real images, learning a continuous volumetric representation of the scene 
         that can reproduce photorealistic views from unseen angles.
+        <div class="grid">
+          <figure>
+            <img src="./media/mlp_3d_model.jpg" alt="mlp_3d_model" />
+            <figcaption>The structure of our MLP neural network used for multi-view reconstruction.</figcaption>
+          </figure>
+        </div>
+        
       </p>
       
       <h3 class="subsection-title" id="p25">Part 2.5: Volume Rendering</h3>
