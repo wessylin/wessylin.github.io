@@ -357,8 +357,12 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/ray_overlay.jpg" alt="ray overlay" />
-          <figcaption>Ray visualization over image grid.</figcaption>
+          <img src="./media/vis_all.jpg" alt="vis_all" />
+          <figcaption>Multi-view calibration of our Lego scene.</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/vis_one.jpg" alt="vis_one" />
+          <figcaption>Ray visualization of our Lego scene from a select camera.</figcaption>
         </figure>
       </div>
 
@@ -408,13 +412,6 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
           <figcaption>GT vs. prediction on held-out views.</figcaption>
         </figure>
       </div>
-      <pre><code># training loop (placeholder)
-for step in range(steps):
-    rays = sample_batch()
-    σ, c = nerf(rays.points, rays.dirs)
-    C = volume_render(σ, c, rays.deltas)
-    loss = mse(C, rays.target_rgb)
-    loss.backward(); opt.step(); opt.zero_grad()</code></pre>
     </section>
 
     <div class="footer">© 2025 Wesley Lin</div>
