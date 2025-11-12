@@ -179,12 +179,6 @@
           <figcaption>Per-view reprojection error (px).</figcaption>
         </figure>
       </div>
-      <pre><code># placeholder: show printed intrinsics/distortion
-K =
-[fx   0  cx]
-[ 0  fy  cy]
-[ 0   0   1]
-dist = [k1, k2, p1, p2, k3]</code></pre>
 
       <h3 class="subsection-title" id="p02">Part 0.2: Capturing a 3D Object Scan</h3>
       <p>
@@ -223,15 +217,7 @@ dist = [k1, k2, p1, p2, k3]</code></pre>
         I undistort each frame with the calibrated parameters and export a NeRF-ready dataset: RGBs, intrinsics <var>K</var>,
         and per-image poses. I also generate train/val splits and a quick JSON manifest.
       </p>
-      <pre><code>{
-  "camera_model": "OPENCV",
-  "fl_x": fx, "fl_y": fy,
-  "cx": cx, "cy": cy,
-  "frames": [
-    {"file_path": "images/000.png", "transform_matrix": [...,4x4]},
-    {"file_path": "images/001.png", "transform_matrix": [...,4x4]}
-  ]
-}</code></pre>
+      
     </section>
 
     <!-- ===============================
