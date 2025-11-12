@@ -372,7 +372,43 @@
         Finally, I integrated a differentiable volume rendering step to synthesize 2D images from the predicted color and density fields. For each ray, 
         accumulated transmittance and emission are computed using exponential attenuation, producing the final pixel color through weighted integration 
         along the ray. This allows gradients to flow through the entire rendering process, enabling end-to-end optimization of the NeRF to 
-        reconstruct the 3D scene accurately.
+        reconstruct the 3D LEGO scene accurately.
+
+        I tracked the progression of our reconstruction for over 3000 iterations, and after 3472 s (approx 1 hr) of continuous training and validation,
+        we successfully achieved a desired PSNR of over 23dB.
+      </p>
+
+      <div class="grid">
+        <figure>
+          <img src="./media/progression_200_18.35.png" alt="progression_200_18.35" />
+          <figcaption>(Iter: 200, PSNR: 18.35)</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/progression_400_19.84.png" alt="progression_400_19.84" />
+          <figcaption>(Iter: 400, PSNR: 19.84)</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/progression_600_20.48.png" alt="progression_600_20.48" />
+          <figcaption>(Iter: 600, PSNR: 20.48)</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/progression_1000_21.26.png" alt="progression_1000_21.26" />
+          <figcaption>(Iter: 1000, PSNR: 21.26)</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/progression_1600_22.png" alt="progression_1600_22" />
+          <figcaption>(Iter: 1600, PSNR: 22.00)</figcaption>
+        </figure>
+        <figure>
+          <img src="./media/progression_3000_23.08.png" alt="progression_3000_23.08" />
+          <figcaption>(Iter: 3000, PSNR: 23.08)</figcaption>
+        </figure>
+      </div>
+
+
+      <h3 class="subsection-title" id="p26">Part 2.6: Training with Your Own Data</h3>
+      <p>
+        Finally, I train on my captured dataset, monitor PSNR/SSIM, and render a camera fly-through of our LEGO scene.
       </p>
 
       <div class="grid">
@@ -389,22 +425,7 @@
           <figcaption>Orbit animation.</figcaption>
         </figure>
       </div>
-
-      <h3 class="subsection-title" id="p26">Part 2.6: Training with Your Own Data</h3>
-      <p>
-        Finally, I train on my captured dataset, monitor PSNR/SSIM, and render a camera fly-through.
-        I include comparisons between training-view reconstructions and unseen views.
-      </p>
-      <div class="grid">
-        <figure>
-          <img src="./media/train_curves.jpg" alt="training curves" />
-          <figcaption>Training curves (PSNR/SSIM).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/gt_vs_pred.jpg" alt="gt vs prediction" />
-          <figcaption>GT vs. prediction on held-out views.</figcaption>
-        </figure>
-      </div>
+      
     </section>
 
     <div class="footer">© 2025 Wesley Lin</div>
