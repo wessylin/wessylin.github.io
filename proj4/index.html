@@ -166,33 +166,25 @@
 
       <h3 class="subsection-title" id="p01">Part 0.1: Calibrating Your Camera</h3>
       <p>
-        I first estimate intrinsic parameters (<var>K</var>) and lens distortion via a checkerboard sequence. I capture
-        multiple views with sufficient tilt and coverage, then solve for <var>K</var> and distortion coefficients.
+        I first estimated intrinsic parameters (<var>K</var>) and lens distortion via an ARUCO calibration checkerboard. I captured 50
+         views with sufficient tilt and coverage, then solved for <var>K</var> and distortion coefficients.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/calib_grid_1.jpg" alt="calibration grid sample 1" />
-          <figcaption>Checkerboard sample frame.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/calib_reproj.jpg" alt="reprojection error plot" />
-          <figcaption>Per-view reprojection error (px).</figcaption>
+          <img src="./media/calibration.jpg" alt="calibration" width="350"/>
+          <figcaption>One of the ARUCO calibration image views.</figcaption>
         </figure>
       </div>
 
       <h3 class="subsection-title" id="p02">Part 0.2: Capturing a 3D Object Scan</h3>
       <p>
-        I captured ~[N] images around the object with consistent exposure and fixed focus. The object is centered, with
+        I captured 40 images around the object with consistent exposure and fixed focus. The object is centered, with
         a textured background to aid pose estimation.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/scan_ring.jpg" alt="capture ring" />
-          <figcaption>Capture arc/ring around object.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/scan_contact_sheet.jpg" alt="contact sheet" />
-          <figcaption>Contact sheet of selected frames.</figcaption>
+          <img src="./media/object.jpg" alt="object" />
+          <figcaption>One of the image views of our Controller object with the ARUCO tag.</figcaption>
         </figure>
       </div>
 
