@@ -166,8 +166,7 @@
 
       <h3 class="subsection-title" id="p01">Part 0.1: Calibrating Your Camera</h3>
       <p>
-        I first estimated intrinsic parameters (<var>K</var>) and lens distortion via an ARUCO calibration checkerboard. I captured 50
-         views with sufficient tilt and coverage, then solved for <var>K</var> and distortion coefficients.
+        I captured 50 views of a 4×4 ArUco tag and used them to estimate the camera’s intrinsic parameters—focal length, principal point, and distortion coefficients.
       </p>
       <div class="grid">
         <figure>
@@ -178,8 +177,7 @@
 
       <h3 class="subsection-title" id="p02">Part 0.2: Capturing a 3D Object Scan</h3>
       <p>
-        I captured 40 images around the object with consistent exposure and fixed focus. The object is centered, with
-        a textured background to aid pose estimation.
+        I then photographed the object from 40 different angles with the tag visible to establish geometric reference points.
       </p>
       <div class="grid">
         <figure>
@@ -190,24 +188,23 @@
 
       <h3 class="subsection-title" id="p03">Part 0.3: Estimating Camera Pose</h3>
       <p>
-        Using [COLMAP/SfM pipeline placeholder], I recover per-image extrinsics (<var>R</var>, <var>t</var>) and refine intrinsics.
-        I visualize the recovered camera frustums and sparse points to verify coverage.
+        Next, we estimated each camera’s position and orientation using PnP (Perspective-n-Point) and visualized the resulting camera frustums in 3D with Viser.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/sfm_cameras.jpg" alt="sfm camera poses" />
-          <figcaption>Recovered camera poses.</figcaption>
+          <img src="./media/viser_1.jpg" alt="viser_1" />
+          <figcaption>A visualization of the camera poses captured.</figcaption>
         </figure>
         <figure>
-          <img src="./media/sfm_sparse.jpg" alt="sparse reconstruction" />
-          <figcaption>Sparse point cloud.</figcaption>
+          <img src="./media/viser_2.jpg" alt="viser_2" />
+          <figcaption>Another point of view.</figcaption>
         </figure>
       </div>
 
       <h3 class="subsection-title" id="p04">Part 0.4: Undistorting Images and Creating a Dataset</h3>
       <p>
-        I undistort each frame with the calibrated parameters and export a NeRF-ready dataset: RGBs, intrinsics <var>K</var>,
-        and per-image poses. I also generate train/val splits and a quick JSON manifest.
+        Finally, we undistorted all images and compiled the calibrated intrinsics, camera-to-world poses, and processed views 
+        into a dataset ready for NeRF training.
       </p>
       
     </section>
