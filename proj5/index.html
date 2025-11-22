@@ -228,50 +228,34 @@
 
       <!-- 1.1 Forward Process -->
       <h3 class="subsection-title" id="p1-forward">1.1: Implementing the Forward Process</h3>
-      <p>
-        TODO: Briefly explain how you implemented the forward process
-        \(x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1-\bar{\alpha}_t}\,\epsilon\),
-        and how you used it to add noise to the 64&times;64 Campanile image at timesteps
-        \(t \in \{250, 500, 750\}\).
-      </p>
+        <p>
+          In this part, I implemented the forward diffusion process, which gradually adds noise to a clean image according to the schedule defined by 
+          <code>&#x03B1;&#772;<sub>t</sub></code>. Using the provided <code>alphas_cumprod</code> array, I computed the noisy image using the standard diffusion equation:
+          <code>x<sub>t</sub> = sqrt(&#x03B1;&#772;<sub>t</sub>) · x<sub>0</sub> + sqrt(1 - &#x03B1;&#772;<sub>t</sub>) · ε</code>, 
+          where <code>ε ~ N(0, I)</code>. My <code>forward(im, t)</code> function samples Gaussian noise with 
+          <code>torch.randn_like</code> and applies this formula to generate progressively noisier versions of the Campanile image. 
+          I visualized the results at timesteps 250, 500, and 750, showing how the structure fades as noise increases.
+        </p>
       <div class="grid">
         <figure>
-          <img src="./media/p1_forward_clean.png" alt="Clean Campanile">
-          <figcaption>Original Campanile (\(t = 0\)).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_forward_t250.png" alt="Noisy t=250">
-          <figcaption>Noisy Campanile at \(t = 250\).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_forward_t500.png" alt="Noisy t=500">
-          <figcaption>Noisy Campanile at \(t = 500\).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_forward_t750.png" alt="Noisy t=750">
-          <figcaption>Noisy Campanile at \(t = 750\).</figcaption>
+          <img src="./media/forward_campanile.jpg" alt="forward_campanile">
+          <figcaption>Progression of the Campanile image being corrupted.</figcaption>
         </figure>
       </div>
 
       <!-- 1.2 Classical Denoising -->
       <h3 class="subsection-title" id="p1-gaussian">1.2: Classical Denoising</h3>
       <p>
-        TODO: Describe how you used Gaussian blur as a classical denoising baseline for the noisy
-        Campanile images at timesteps [250, 500, 750]. Mention the kernel size / sigma you found
-        “best” and what limitations you noticed.
+        For the classical denoising step, I applied a Gaussian blur filter to each noisy image using 
+        <code>torchvision.transforms.functional.gaussian_blur</code>. By tuning the kernel size and sigma, I produced smoothed versions of the inputs. 
+        While the blur removes some high-frequency noise, it also washes out important details, especially at higher timesteps. 
+        These results demonstrate the limitations of traditional filtering methods when attempting to reverse the forward diffusion process.
       </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/p1_gaussian_t250.png" alt="Gaussian t=250">
-          <figcaption>Gaussian-denoised <br> \(t = 250\).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_gaussian_t500.png" alt="Gaussian t=500">
-          <figcaption>Gaussian-denoised <br> \(t = 500\).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_gaussian_t750.png" alt="Gaussian t=750">
-          <figcaption>Gaussian-denoised <br> \(t = 750\).</figcaption>
+          <img src="./media/classic_campanile.jpg" alt="classic_campanile">
+          <figcaption>The Campanile denoised at every level.</figcaption>
         </figure>
       </div>
 
