@@ -146,25 +146,25 @@
 
       <h3 class="subsection-title" id="overview">Overview</h3>
       <p>
-        In this project, I experiment with pre-trained diffusion models using the DeepFloyd IF Stage I model.
-        I implement forward and reverse diffusion processes, build sampling loops, and apply them to tasks
-        such as denoising, sampling from noise, image-to-image editing, inpainting, and creating optical illusions
-        like visual anagrams and hybrid images.
+        In this project, I experiment with pre-trained diffusion models using the DeepFloyd IF Stage I model. I implement forward and reverse diffusion 
+        processes, build sampling loops, and apply them to tasks such as denoising, sampling from noise, image-to-image editing, inpainting, and creating 
+        optical illusions like visual anagrams and hybrid images.
       </p>
 
       <h3 class="subsection-title" id="p0-access">Part 0.1: Gaining Access to DeepFloyd</h3>
       <p>
-        <!-- TODO: Describe how you set up your Hugging Face account, accepted the DeepFloyd license,
-             and loaded the provided notebook / prompt embeddings. -->
-        TODO: Write a short paragraph about creating a Hugging Face account, accepting the DeepFloyd IF license,
-        and authenticating with your access token in Colab.
+        I first set up the environment needed to run DeepFloyd IF by installing all required packages in Google Colab (including Diffusers, 
+        Transformers, Mediapy, and Accelerate), and configured my device to use CUDA. I then loaded the two DeepFloyd IF stages from HuggingFace 
+        using half-precision (fp16) weights to fit within GPU memory. Stage I produces 64×64 image latents, and Stage II upscales them to 256×256. 
+        Both models were moved to the GPU for faster sampling.
       </p>
 
       <h3 class="subsection-title" id="p0-prompts">Part 0.2: Playing with Text Prompts</h3>
       <p>
-        <!-- TODO: Add your own prompts and reflections here. -->
-        TODO: Describe how you generated prompt embeddings for your own text prompts, how you chose them,
-        and what values of <code>num_inference_steps</code> you experimented with. Include your global random seed here.
+        Before generating images, I loaded my prompt embeddings from the provided .pth dictionary and inspected the available text prompts. Using these 
+        embeddings, I sampled images from Stage I and Stage II with a fixed random seed (seed = 100) to ensure reproducibility. I experimented with different 
+        denoising budgets—starting with num_inference_steps = 20 for fast results and later increasing to 40 for higher-quality generations. This helped me 
+        understand how the prompt conditioning and step count influence the final image quality.
       </p>
 
       <div class="grid">
