@@ -155,15 +155,15 @@
       <p>
         I first set up the environment needed to run DeepFloyd IF by installing all required packages in Google Colab (including Diffusers, 
         Transformers, Mediapy, and Accelerate), and configured my device to use CUDA. I then loaded the two DeepFloyd IF stages from HuggingFace 
-        using half-precision (fp16) weights to fit within GPU memory. Stage I produces 64×64 image latents, and Stage II upscales them to 256×256. 
+        using half-precision (<code>fp16</code>) weights to fit within GPU memory. Stage I produces 64×64 image latents, and Stage II upscales them to 256×256. 
         Both models were moved to the GPU for faster sampling.
       </p>
 
       <h3 class="subsection-title" id="p0-prompts">Part 0.2: Playing with Text Prompts</h3>
       <p>
         Before generating images, I loaded my prompt embeddings from the provided .pth dictionary and inspected the available text prompts. Using these 
-        embeddings, I sampled images from Stage I and Stage II with a fixed random seed (seed = 100) to ensure reproducibility. I experimented with different 
-        denoising budgets—starting with num_inference_steps = 20 for fast results and later increasing to 40 for higher-quality generations. This helped me 
+        embeddings, I sampled images from Stage I and Stage II with a fixed random seed (<code>seed = 100</code>) to ensure reproducibility. I experimented with different 
+        denoising budgets—starting with <code>num_inference_steps = 20</code> for fast results and later increasing to 40 for higher-quality generations. This helped me 
         understand how the prompt conditioning and step count influence the final image quality.
       </p>
             
