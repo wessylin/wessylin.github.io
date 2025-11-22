@@ -239,7 +239,7 @@
         </p>
       <div class="grid">
         <figure>
-          <img src="./media/forward_campanile.jpg" alt="forward_campanile">
+          <img src="./media/forward_campanile.jpg" alt="forward_campanile" height = 200>
           <figcaption>Progression of the Campanile image being corrupted.</figcaption>
         </figure>
       </div>
@@ -263,22 +263,27 @@
       <!-- 1.3 One-Step Denoising -->
       <h3 class="subsection-title" id="p1-onestep">1.3: One-Step Denoising</h3>
       <p>
-        TODO: Explain how you used <code>stage_1.unet</code> to predict the noise in \(x_t\) and recover
-        an estimate of \(x_0\) in one step for each noisy Campanile. Mention how you used the
-        prompt embedding for <code>"a high quality photo"</code>.
+        In this part, we used the pretrained DeepFloyd UNet to perform a single denoising step on the noisy Campanile images. 
+        For each timestep <code>t ∈ {250, 500, 750}</code>, I first generated a noisy image <code>x<sub>t</sub></code> using the forward process from Part 1.1. 
+        Then, I passed this noisy image, the timestep, and the null prompt embedding into <code>stage_1.unet</code>, which predicts the Gaussian noise present in <code>x<sub>t</sub></code>. 
+        Using the diffusion equation, I estimated the original clean image by removing the scaled noise term:
+        <code>x̂<sub>0</sub> = (x<sub>t</sub> − √(1 − ᾱ<sub>t</sub>) ε̂) / √(ᾱ<sub>t</sub>)</code>.
+        Finally, I visualized the original image, the noisy image, and the one-step denoised estimate side by side. 
+        This experiment demonstrates that a single UNet denoising step can partially recover structure, though the reconstruction becomes less accurate at larger timesteps.
       </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/p1_onestep_t250.png" alt="One-step t=250">
-          <figcaption>Original, noisy, and one-step denoised at \(t = 250\).</figcaption>
+          <img src="./media/onestep_250.jpg" alt="onestep_250.jpg">
+          <figcaption>Original, noisy, and one-step denoised at t = 250.</figcaption>
         </figure>
         <figure>
-          <img src="./media/p1_onestep_t500.png" alt="One-step t=500">
-          <figcaption>Original, noisy, and one-step denoised at \(t = 500\).</figcaption>
+          <img src="./media/onestep_500.jpg" alt="onestep_500.jpg">
+          <figcaption>Original, noisy, and one-step denoised at t = 500.</figcaption>
         </figure>
         <figure>
-          <img src="./media/p1_onestep_t750.png" alt="One-step t=750">
-          <figcaption>Original, noisy, and one-step denoised at \(t = 750\).</figcaption>
+          <img src="./media/onestep_750.jpg" alt="onestep_750.jpg">
+          <figcaption>Original, noisy, and one-step denoised at t = 750.</figcaption>
         </figure>
       </div>
 
