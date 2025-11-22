@@ -1,1 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CS 180/280A — Project 5 (Part A): Diffusion Models</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <style>
+    /* ---------- Layout ---------- */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #fafafa;
+      color: #222;
+    }
+
+    .page {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ---------- Sidebar ---------- */
+    #sidebar {
+      width: 240px;
+      padding: 24px 18px;
+      background: #f0f0f0;
+      border-right: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+
+    #sidebar h1 {
+      font-size: 20px;
+      margin: 0 0 4px 0;
+    }
+
+    #sidebar .subtitle {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    #sidebar .meta {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 18px;
+    }
+
+    #sidebar a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+
+    #sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .nav-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 16px 0 4px;
+      color: #666;
+    }
+
+    #sidebar ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 13px;
+    }
+
+    #sidebar li {
+      margin-bottom: 4px;
+    }
+
+    #sidebar li a {
+      display: inline-block;
+      padding: 2px 0;
+    }
+
+    /* ---------- Main content ---------- */
+    #content {
+      flex: 1;
+      padding: 32px 40px 60px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    h1.page-title {
+      font-size: 32px;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    .course-info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 18px;
+    }
+
+    .author-info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-top: 26px;
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 15px;
+      margin-top: 18px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      margin-bottom: 36px;
+    }
+
+    .subsection {
+      margin-bottom: 22px;
+    }
+
+    .description {
+      max-width: 760px;
+    }
+
+    ul, ol {
+      max-width: 760px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #777;
+      font-style: italic;
+    }
+
+    /* ---------- Figures & image grids ---------- */
+    figure {
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: white;
+    }
+
+    figcaption {
+      font-size: 13px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    .image-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .image-row figure {
+      flex: 1 1 200px;
+      margin: 0;
+    }
+
+    .image-row img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ---------- Checklist list style ---------- */
+    .checklist li::marker {
+      content: "▢ ";
+      color: #444;
+    }
+
+    /* ---------- Responsive tweaks ---------- */
+    @media (max-width: 900px) {
+      .page {
+        flex-direction: column;
+      }
+
+      #sidebar {
+        position: relative;
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      #content {
+        padding: 20px 18px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside id="sidebar">
+    <h1>Project 5 (Part A)</h1>
+    <div class="subtitle">Diffusion Models</div>
+    <div class="meta">
+      CS 180 / 280A<br />
+      Fall 2025
+    </div>
+
+    <div class="nav-section-title">Overview</div>
+    <ul>
+      <li><a href="#overview">Project Overview</a></li>
+      <li><a href="#part0">Part 0 &mdash; Setup</a></li>
+      <li><a href="#part1">Part 1 &mdash; Sampling & Editing</a></li>
+      <li><a href="#bells-whistles">Part 2 &mdash; Bells &amp; Whistles</a></li>
+      <li><a href="#deliverables">Deliverable Checklist</a></li>
+    </ul>
+
+    <div class="nav-section-title">Part 1 Detail</div>
+    <ul>
+      <li><a href="#sec1-1">1.1 Forward Process</a></li>
+      <li><a href="#sec1-2">1.2 Classical Denoising</a></li>
+      <li><a href="#sec1-3">1.3 One-Step Denoising</a></li>
+      <li><a href="#sec1-4">1.4 Iterative Denoising</a></li>
+      <li><a href="#sec1-5">1.5 Diffusion Sampling</a></li>
+      <li><a href="#sec1-6">1.6 Classifier-Free Guidance</a></li>
+      <li><a href="#sec1-7">1.7 Image-to-image + Variants</a></li>
+      <li><a href="#sec1-8">1.8 Visual Anagrams</a></li>
+      <li><a href="#sec1-9">1.9 Hybrid Images</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===================== Main Content ===================== -->
+  <main id="content">
+    <header>
+      <h1 class="page-title">Project 5 (Part A): The Power of Diffusion Models</h1>
+      <div class="course-info">CS 180 / 280A &mdash; Intro to Computer Vision and Computational Photography</div>
+      <div class="author-info">
+        Wesley Lin<br />
+        <span class="note">Replace with your name / SID / contact as needed.</span>
+      </div>
+    </header>
+
+    <!-- ===================== Overview ===================== -->
+    <section id="overview" class="section">
+      <h2>Overview</h2>
+      <p class="description">
+        In this project, I explore modern diffusion models for image generation and editing.
+        Using the pre-trained DeepFloyd IF model, I implement forward and reverse diffusion
+        processes, build sampling loops, and apply them to tasks such as denoising,
+        image-to-image translation, inpainting, visual anagrams, and hybrid images.
+      </p>
+
+      <p class="description">
+        All core code is implemented in the provided Colab notebook. This webpage summarizes
+        my experimental setup, shows qualitative results, and includes short reflections
+        on what I observed in each part.
+      </p>
+    </section>
+
+    <!-- ===================== Part 0 ===================== -->
+    <section id="part0" class="section">
+      <h2>Part 0: Setup & Text-to-Image Prompts</h2>
+
+      <div class="subsection">
+        <h3>0.1 Gaining Access to DeepFloyd IF</h3>
+        <p class="description">
+          Briefly describe how you set up your environment: Hugging Face account, accepting
+          the DeepFloyd IF license, setting the access token, and running the starter notebook.
+        </p>
+        <p class="note">TODO: Add a short paragraph about setup and any hiccups you ran into.</p>
+      </div>
+
+      <div class="subsection">
+        <h3>0.2 Playing with Text Prompts</h3>
+        <p class="description">
+          Here, I generated prompt embeddings for my own text prompts and used the provided
+          DeepFloyd pipeline to sample images. I experimented with different
+          <code>num_inference_steps</code> and recorded a global random seed that I reused for
+          the rest of the project.
+        </p>
+
+        <h4>Example Prompts and Outputs</h4>
+        <div class="image-row">
+          <figure>
+            <img src="images/part0_prompt1.png" alt="Prompt 1 output" />
+            <figcaption>
+              Prompt 1: <em>"TODO: your caption here"</em><br />
+              Settings: <code>num_inference_steps = ...</code>
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="images/part0_prompt2.png" alt="Prompt 2 output" />
+            <figcaption>
+              Prompt 2: <em>"TODO: your caption here"</em><br />
+              Settings: <code>num_inference_steps = ...</code>
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="images/part0_prompt3.png" alt="Prompt 3 output" />
+            <figcaption>
+              Prompt 3: <em>"TODO: your caption here"</em><br />
+              Settings: <code>num_inference_steps = ...</code>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h4>Reflections</h4>
+        <ul>
+          <li>Global random seed used throughout: <code>TODO: seed</code></li>
+          <li>How different step counts affected quality vs. diversity.</li>
+          <li>Which prompts produced surprisingly strong or weak results.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== Part 1 ===================== -->
+    <section id="part1" class="section">
+      <h2>Part 1: Sampling Loops and Diffusion-Based Editing</h2>
+
+      <!-- ---------- 1.1 Forward Process ---------- -->
+      <div id="sec1-1" class="subsection">
+        <h3>1.1 Implementing the Forward Process</h3>
+        <p class="description">
+          I implemented the forward diffusion process that maps a clean image
+          \(x_0\) to a noisy image \(x_t\) using the precomputed
+          cumulative noise schedule \(\bar{\alpha}_t\). I applied this to
+          the Berkeley Campanile image at several timesteps.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_1_campanile_clean.png" alt="Clean Campanile" />
+            <figcaption>Original Campanile image (\(t = 0\)).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_1_campanile_t250.png" alt="Campanile t=250" />
+            <figcaption>Noisy Campanile at \(t = 250\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_1_campanile_t500.png" alt="Campanile t=500" />
+            <figcaption>Noisy Campanile at \(t = 500\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_1_campanile_t750.png" alt="Campanile t=750" />
+            <figcaption>Noisy Campanile at \(t = 750\).</figcaption>
+          </figure>
+        </div>
+
+        <h4>Observations</h4>
+        <ul>
+          <li>Noise visibly increases as \(t\) grows, while structure gradually disappears.</li>
+          <li>At high timesteps, the image is close to pure Gaussian noise.</li>
+        </ul>
+      </div>
+
+      <!-- ---------- 1.2 Classical Denoising ---------- -->
+      <div id="sec1-2" class="subsection">
+        <h3>1.2 Classical Denoising (Gaussian Blur)</h3>
+        <p class="description">
+          Using Gaussian blur as a classical baseline, I attempted to denoise the
+          noisy Campanile images from Part 1.1. It partially removes high-frequency
+          noise but also severely blurs edges and textures.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_2_t250_noisy.png" alt="Noisy t=250" />
+            <figcaption>Noisy \(t=250\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_2_t250_gaussian.png" alt="Gaussian t=250" />
+            <figcaption>Gaussian denoised \(t=250\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_2_t500_gaussian.png" alt="Gaussian t=500" />
+            <figcaption>Gaussian denoised \(t=500\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_2_t750_gaussian.png" alt="Gaussian t=750" />
+            <figcaption>Gaussian denoised \(t=750\).</figcaption>
+          </figure>
+        </div>
+
+        <h4>Takeaways</h4>
+        <ul>
+          <li>Gaussian blur smooths noise but also obliterates fine detail.</li>
+          <li>Heavier noise levels require stronger blur, which further degrades structure.</li>
+        </ul>
+      </div>
+
+      <!-- ---------- 1.3 One-Step Denoising ---------- -->
+      <div id="sec1-3" class="subsection">
+        <h3>1.3 One-Step Denoising with a Pre-trained Diffusion Model</h3>
+        <p class="description">
+          Here I used the DeepFloyd UNet denoiser to predict the noise in
+          \(x_t\) and reconstruct an estimate of the original Campanile in a
+          single step. The model is conditioned on the timestep and a generic
+          prompt embedding (e.g., <code>"a high quality photo"</code>).
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_3_t250_noisy.png" alt="Noisy t=250" />
+            <figcaption>Noisy input at \(t=250\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_3_t250_denoised.png" alt="Denoised t=250" />
+            <figcaption>One-step denoised estimate at \(t=250\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_3_t500_denoised.png" alt="Denoised t=500" />
+            <figcaption>One-step denoised estimate at \(t=500\).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_3_t750_denoised.png" alt="Denoised t=750" />
+            <figcaption>One-step denoised estimate at \(t=750\).</figcaption>
+          </figure>
+        </div>
+
+        <h4>Comparison vs. Gaussian Blur</h4>
+        <p class="description">
+          TODO: Briefly compare structural fidelity and artifact patterns between
+          the diffusion-based denoiser and the Gaussian baseline.
+        </p>
+      </div>
+
+      <!-- ---------- 1.4 Iterative Denoising ---------- -->
+      <div id="sec1-4" class="subsection">
+        <h3>1.4 Iterative Denoising with Strided Timesteps</h3>
+        <p class="description">
+          I implemented a multi-step denoising loop using a strided schedule of
+          timesteps (starting around 990 and stepping down to 0). At each step,
+          the UNet predicts noise and I update the latent according to the
+          provided DDPM-style formula.
+        </p>
+
+        <h4>Denoising Progression</h4>
+        <div class="image-row">
+          <figure>
+            <img src="images/1_4_step0.png" alt="Iterative step 0" />
+            <figcaption>Iteration 0 (noisy start).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_4_step5.png" alt="Iterative step 5" />
+            <figcaption>Iteration 5.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_4_step10.png" alt="Iterative step 10" />
+            <figcaption>Iteration 10.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_4_final.png" alt="Iterative final" />
+            <figcaption>Final denoised image.</figcaption>
+          </figure>
+        </div>
+
+        <h4>Final Comparisons</h4>
+        <div class="image-row">
+          <figure>
+            <img src="images/1_4_one_step.png" alt="One-step" />
+            <figcaption>Single-step denoising.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_4_iterative.png" alt="Iterative" />
+            <figcaption>Iterative denoising.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_4_gaussian.png" alt="Gaussian" />
+            <figcaption>Gaussian blur baseline.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ---------- 1.5 Sampling from Noise ---------- -->
+      <div id="sec1-5" class="subsection">
+        <h3>1.5 Diffusion Model Sampling from Pure Noise</h3>
+        <p class="description">
+          By starting from pure Gaussian noise and running the iterative
+          denoising loop with <code>i_start = 0</code>, I can sample new images
+          from the model conditioned on the prompt
+          <em>"a high quality photo"</em>.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_5_sample1.png" alt="Sample 1" />
+            <figcaption>Sample 1.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_5_sample2.png" alt="Sample 2" />
+            <figcaption>Sample 2.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_5_sample3.png" alt="Sample 3" />
+            <figcaption>Sample 3.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_5_sample4.png" alt="Sample 4" />
+            <figcaption>Sample 4.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_5_sample5.png" alt="Sample 5" />
+            <figcaption>Sample 5.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ---------- 1.6 CFG ---------- -->
+      <div id="sec1-6" class="subsection">
+        <h3>1.6 Classifier-Free Guidance (CFG)</h3>
+        <p class="description">
+          I extended the sampler to compute both conditional and unconditional
+          noise estimates and combined them with a guidance scale
+          \(\gamma = 7\). This significantly strengthened adherence to the text
+          prompt at the cost of some diversity.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_6_cfg1.png" alt="CFG sample 1" />
+            <figcaption>CFG sample 1 (\(\gamma=7\)).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_6_cfg2.png" alt="CFG sample 2" />
+            <figcaption>CFG sample 2 (\(\gamma=7\)).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_6_cfg3.png" alt="CFG sample 3" />
+            <figcaption>CFG sample 3 (\(\gamma=7\)).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_6_cfg4.png" alt="CFG sample 4" />
+            <figcaption>CFG sample 4 (\(\gamma=7\)).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_6_cfg5.png" alt="CFG sample 5" />
+            <figcaption>CFG sample 5 (\(\gamma=7\)).</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ---------- 1.7 Image-to-image ---------- -->
+      <div id="sec1-7" class="subsection">
+        <h3>1.7 Image-to-Image Translation (SDEdit-style)</h3>
+        <p class="description">
+          Using CFG from this point on, I implemented image-to-image translation
+          by noising an input image to a chosen level and then running the
+          denoising loop to project it back onto the natural image manifold.
+        </p>
+
+        <h4>1.7: Campanile Edits at Different Noise Levels</h4>
+        <div class="image-row">
+          <figure>
+            <img src="images/1_7_camp_i1.png" alt="Campanile i_start=1" />
+            <figcaption>Campanile, <code>i_start = 1</code>.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_camp_i3.png" alt="Campanile i_start=3" />
+            <figcaption>Campanile, <code>i_start = 3</code>.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_camp_i5.png" alt="Campanile i_start=5" />
+            <figcaption>Campanile, <code>i_start = 5</code>.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_camp_i7.png" alt="Campanile i_start=7" />
+            <figcaption>Campanile, <code>i_start = 7</code>.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_camp_i10.png" alt="Campanile i_start=10" />
+            <figcaption>Campanile, <code>i_start = 10</code>.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_camp_i20.png" alt="Campanile i_start=20" />
+            <figcaption>Campanile, <code>i_start = 20</code>.</figcaption>
+          </figure>
+        </div>
+
+        <h4>1.7: Edits of My Own Images</h4>
+        <div class="image-row">
+          <figure>
+            <img src="images/1_7_own1_grid.png" alt="Own image 1 edits" />
+            <figcaption>My image 1, edits across noise levels.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_own2_grid.png" alt="Own image 2 edits" />
+            <figcaption>My image 2, edits across noise levels.</figcaption>
+          </figure>
+        </div>
+
+        <h4>1.7.1 Editing Hand-Drawn and Web Images</h4>
+        <p class="description">
+          TODO: Add grids showing edits of one web image and two hand-drawn
+          inputs across noise levels [1, 3, 5, 7, 10, 20].
+        </p>
+
+        <h4>1.7.2 Inpainting</h4>
+        <p class="description">
+          I implemented an inpainting loop that keeps pixels outside a mask
+          close to the original image (with appropriate noise), while allowing the
+          masked region to be resynthesized by the diffusion model.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_7_inpaint_orig.png" alt="Original Campanile" />
+            <figcaption>Campanile original.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_inpaint_mask.png" alt="Mask" />
+            <figcaption>Inpainting mask (region to edit).</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_inpaint_result.png" alt="Inpainted" />
+            <figcaption>Inpainted Campanile result.</figcaption>
+          </figure>
+        </div>
+
+        <p class="description">
+          TODO: Include two additional inpainting examples on your own images.
+        </p>
+
+        <h4>1.7.3 Text-Conditional Image-to-Image</h4>
+        <p class="description">
+          Finally, I repeated the SDEdit-style process but conditioned the
+          denoising on more descriptive prompts, allowing the output to match
+          both the original content and the text description.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_7_text_cond_camp_grid.png" alt="Campanile text-conditional grid" />
+            <figcaption>Campanile edits guided by a custom text prompt.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_text_cond_own1_grid.png" alt="Own image 1 text-conditional" />
+            <figcaption>Own image 1, text-conditional edits.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_7_text_cond_own2_grid.png" alt="Own image 2 text-conditional" />
+            <figcaption>Own image 2, text-conditional edits.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ---------- 1.8 Visual Anagrams ---------- -->
+      <div id="sec1-8" class="subsection">
+        <h3>1.8 Visual Anagrams</h3>
+        <p class="description">
+          I implemented a visual anagram sampler that averages two guided noise
+          estimates: one for a prompt \(p_1\) on the original orientation, and
+          one for a prompt \(p_2\) on a flipped version of the current image.
+          The result is an image that looks like one prompt upright and another
+          when flipped upside down.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_8_anagram1_upright.png" alt="Anagram 1 upright" />
+            <figcaption>Illusion 1: upright view.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_8_anagram1_flipped.png" alt="Anagram 1 flipped" />
+            <figcaption>Illusion 1: flipped view.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_8_anagram2_upright.png" alt="Anagram 2 upright" />
+            <figcaption>Illusion 2: upright view.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_8_anagram2_flipped.png" alt="Anagram 2 flipped" />
+            <figcaption>Illusion 2: flipped view.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ---------- 1.9 Hybrid Images ---------- -->
+      <div id="sec1-9" class="subsection">
+        <h3>1.9 Hybrid Images</h3>
+        <p class="description">
+          For hybrid images, I combined low-frequency components of one
+          prompt-guided noise estimate with high-frequency components of another.
+          After denoising, the resulting image behaves like a hybrid: one concept
+          dominates at close range and another at a distance.
+        </p>
+
+        <div class="image-row">
+          <figure>
+            <img src="images/1_9_hybrid1.png" alt="Hybrid 1" />
+            <figcaption>Hybrid Image 1.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/1_9_hybrid2.png" alt="Hybrid 2" />
+            <figcaption>Hybrid Image 2.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Part 2: Bells & Whistles ===================== -->
+    <section id="bells-whistles" class="section">
+      <h2>Part 2: Bells &amp; Whistles (Optional / CS280A Required)</h2>
+      <p class="description">
+        This section is for extra credit and CS280A requirements. Examples
+        include additional visual anagrams using more complex geometric
+        transformations, designing a course logo with text-conditioned
+        image-to-image translation, or other creative extensions of the
+        diffusion framework.
+      </p>
+
+      <h3>Extra Visual Anagrams</h3>
+      <p class="description">
+        TODO: If completed, show additional anagrams here using transformations
+        beyond simple vertical flipping.
+      </p>
+
+      <h3>Custom Logo or Creative Extension</h3>
+      <p class="description">
+        TODO: If completed, describe your idea (e.g., a CS180 logo) and show
+        generated results.
+      </p>
+    </section>
+
+    <!-- ===================== Deliverables Checklist ===================== -->
+    <section id="deliverables" class="section">
+      <h2>Deliverable Checklist</h2>
+      <p class="description">
+        This section is for me to verify that I’ve included all requested
+        qualitative results. Check each item off before exporting to PDF.
+      </p>
+
+      <ul class="checklist">
+        <li>Part 0: prompts, images, and global random seed.</li>
+        <li>1.1: Campanile at \(t = 250, 500, 750\).</li>
+        <li>1.2: Gaussian-denoised versions of the three noisy images.</li>
+        <li>1.3: One-step denoising results for each noise level.</li>
+        <li>1.4: Iterative denoising progression and final comparison grid.</li>
+        <li>1.5: Five samples from pure noise.</li>
+        <li>1.6: Five CFG samples at \(\gamma = 7\).</li>
+        <li>1.7: Campanile edits at noise levels [1, 3, 5, 7, 10, 20].</li>
+        <li>1.7: Two of my own images with the same procedure.</li>
+        <li>1.7.1: Web and hand-drawn image edits.</li>
+        <li>1.7.2: Inpainting on Campanile and two of my own images.</li>
+        <li>1.7.3: Text-conditional edits on Campanile and two of my own images.</li>
+        <li>1.8: Two visual anagram illusions (upright + flipped).</li>
+        <li>1.9: Two hybrid images.</li>
+        <li>Part 2 (optional): Any bells &amp; whistles I implemented.</li>
+      </ul>
+
+      <p class="note">
+        TODO: Before submitting, double-check that the filenames in this HTML
+        match the actual image files in your <code>images/</code> directory.
+      </p>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
