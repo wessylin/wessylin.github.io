@@ -290,39 +290,50 @@
       <!-- 1.4 Iterative Denoising -->
       <h3 class="subsection-title" id="p1-iterative">1.4: Iterative Denoising</h3>
       <p>
-        TODO: Summarize how you constructed <code>strided_timesteps</code> starting at 990 with stride 30,
-        and how your <code>iterative_denoise</code> function uses the UNet and equation (A.3) to step
-        from a noisy image toward a cleaner one.
+        In this section, I implemented the full DDPM reverse process to iteratively denoise an image.
+        Instead of applying the UNet once (as in Part 1.3), I stepped backward through a list of
+        timesteps <code>strided_timesteps</code>, starting from a noisy Campanile image. At each step,
+        I used the DeepFloyd UNet to predict the noise in the current image, converted that prediction
+        into an estimate of the underlying clean image, and then combined the two to form a slightly
+        less noisy image at the previous timestep. I also added the learned variance using the
+        scheduler’s variance prediction, which injects the correct amount of randomness at each step.
       </p>
       <p>
-        TODO: Include a grid showing the noisy Campanile at every 5th iteration, plus the final
-        iterative denoised image, the one-step denoised image, and the Gaussian baseline.
+        To visualize the process, I saved the intermediate images every 5 iterations. The results show
+        the Campanile gradually emerging from pure noise as the model walks back along the diffusion
+        trajectory. Finally, I compared four images side by side: the original noisy input, the final
+        iterative denoising result, the one-step UNet denoising result from Part 1.3, and a simple
+        Gaussian-blurred baseline. Iterative denoising produced the sharpest and most realistic image,
+        while the one-step and blurred outputs remained noticeably more washed out and noisy.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/p1_iterative_progress1.png" alt="Iterative step progression 1">
+          <img src="./media/iterative_5.jpg" alt="iterative_5">
           <figcaption>Denoising progression (every 5th step).</figcaption>
         </figure>
         <figure>
-          <img src="./media/p1_iterative_progress2.png" alt="Iterative step progression 2">
-          <figcaption>More steps in the denoising loop.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_iterative_final.png" alt="Iterative final">
-          <figcaption>Final iterative denoised Campanile.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_iterative_compare.png" alt="Iterative vs one-step vs Gaussian">
-          <figcaption>Comparison: iterative vs one-step vs Gaussian.</figcaption>
+          <img src="./media/iterative_comp.jpg" alt="iterative_comp">
+          <figcaption>Outputs across three strategies.</figcaption>
         </figure>
       </div>
 
       <!-- 1.5 Sampling from Noise -->
       <h3 class="subsection-title" id="p1-sampling">1.5: Diffusion Model Sampling</h3>
       <p>
-        TODO: Describe how you sampled pure Gaussian noise, set <code>i_start = 0</code>, and
-        ran <code>iterative_denoise</code> to generate images from scratch using the prompt
-        <code>"a high quality photo"</code>.
+        In Part 1.5, I reused the same iterative denoising function to generate images entirely from
+        scratch. Instead of starting from a noisy Campanile, I initialized the process with pure
+        Gaussian noise (<code>torch.randn</code>) and set <code>i_start = 0</code>, so the model
+        performed the full reverse diffusion chain from the noisiest timestep back to a clean image.
+        I conditioned the UNet on the text embedding for the prompt
+        <code>"a high quality photo"</code>, so the generated images were guided toward that
+        concept.
+      </p>
+      <p>
+        I repeated this sampling procedure five times and displayed all five outputs. Although the
+        samples are not perfect (since we have not yet applied classifier-free guidance), they are
+        coherent and resemble natural photographs, demonstrating the core idea of diffusion sampling:
+        starting from random noise and transforming it into meaningful images through a sequence of
+        learned denoising updates.
       </p>
       <div class="grid">
         <figure>
@@ -336,14 +347,6 @@
         <figure>
           <img src="./media/p1_sampling_3.png" alt="Sample 3">
           <figcaption>Sample 3.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_sampling_4.png" alt="Sample 4">
-          <figcaption>Sample 4.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_sampling_5.png" alt="Sample 5">
-          <figcaption>Sample 5.</figcaption>
         </figure>
       </div>
 
