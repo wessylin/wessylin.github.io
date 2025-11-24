@@ -327,7 +327,7 @@
         Gaussian noise (<code>torch.randn</code>) and set <code>i_start = 0</code>, so the model
         performed the full reverse diffusion chain from the noisiest timestep back to a clean image.
         I conditioned the UNet on the text embedding for the prompt
-        <code>"a high quality photo"</code>, so the generated images were guided toward that
+        <code>"a high-quality photo"</code>, so the generated images were guided toward that
         concept.
       </p>
       <p>
@@ -350,8 +350,8 @@
         In Part 1.6, I extended my iterative denoising pipeline to support
         <strong>Classifier-Free Guidance (CFG)</strong>, which improves sample quality by
         combining conditional and unconditional noise predictions. I created two prompt
-        embeddings&mdash;a conditional one for <code>"a high quality photo"</code>
-        and an unconditional one for the empty string -- and ran the UNet twice at each
+        embeddings (a conditional one for <code>"a high quality photo"</code>
+        and an unconditional one for the empty string), and ran the UNet twice at each
         denoising step. Using the equation,
         <code>&epsilon; = \epsilon_u + \gamma (\epsilon_c - \epsilon_u)</code>, I computed
         a guided noise estimate that emphasizes features related to the text prompt.
@@ -364,24 +364,8 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/p1_cfg_1.png" alt="CFG sample 1">
-          <figcaption>CFG sample 1 (\(\gamma = 7\)).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_cfg_2.png" alt="CFG sample 2">
-          <figcaption>CFG sample 2 (\(\gamma = 7\)).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_cfg_3.png" alt="CFG sample 3">
-          <figcaption>CFG sample 3 (\(\gamma = 7\)).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_cfg_4.png" alt="CFG sample 4">
-          <figcaption>CFG sample 4 (\(\gamma = 7\)).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_cfg_5.png" alt="CFG sample 5">
-          <figcaption>CFG sample 5 (\(\gamma = 7\)).</figcaption>
+          <img src="./media/cfg_sammples.jpg" alt="cfg_samples">
+          <figcaption>5 CFG samples.</figcaption>
         </figure>
       </div>
 
