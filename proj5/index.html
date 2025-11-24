@@ -370,53 +370,40 @@
       </div>
 
       <!-- 1.7 Image-to-Image and Variants -->
-      <h3 class="subsection-title" id="p1-i2i">1.7: Image-to-Image and Variants</h3>
+      <h3 class="subsection-title" id="p1-i2i">1.7: Image-to-Image Translation and Variants</h3>
       <p>
-        TODO: Summarize your SDEdit-style image-to-image procedure: adding noise to an input
-        image up to a chosen <code>i_start</code>, then using the guided sampling loop to
-        project it back to a natural image.
+      In part 1.7, I applied the SDEdit-style workflow to edit the Campanile image. I first added different amounts of noise at timesteps
+      [1, 3, 5, 7, 10, 20] using the forward diffusion process, then denoised each version starting from that same index using my
+      <code>iterative_denoise_cfg</code> function. Since classifier-free guidance (CFG) blends conditional
+      (<code>"a high quality photo"</code>) and unconditional noise estimates, the model reconstructs a natural-looking image while
+      preserving the structure of the original.
       </p>
-
-      <p><strong>1.7: Campanile at Different Noise Levels</strong></p>
+      
+      <p>
+      The results show a smooth progression: low noise levels closely match the input image, while higher noise levels allow stronger edits
+      as the model hallucinates more detail. This demonstrates how diffusion models can perform controlled, progressively stronger edits
+      on real images.
+      </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/p1_i2i_camp_i1.png" alt="Campanile i_start=1">
-          <figcaption>Campanile, <code>i_start = 1</code>.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_camp_i3.png" alt="Campanile i_start=3">
-          <figcaption>Campanile, <code>i_start = 3</code>.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_camp_i5.png" alt="Campanile i_start=5">
-          <figcaption>Campanile, <code>i_start = 5</code>.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_camp_i7.png" alt="Campanile i_start=7">
-          <figcaption>Campanile, <code>i_start = 7</code>.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_camp_i10.png" alt="Campanile i_start=10">
-          <figcaption>Campanile, <code>i_start = 10</code>.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_camp_i20.png" alt="Campanile i_start=20">
-          <figcaption>Campanile, <code>i_start = 20</code>.</figcaption>
+          <img src="./media/campanile_diffusion.jpg" alt="campanile_diffusion.jpg">
+          <figcaption>Our Campanile across different noise levels.</code>.</figcaption>
         </figure>
       </div>
-
-      <p><strong>1.7: Two of My Own Images</strong></p>
       <div class="grid">
         <figure>
-          <img src="./media/p1_i2i_own1_grid.png" alt="Own image 1 edits">
-          <figcaption>My image 1: edits across noise levels.</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_i2i_own2_grid.png" alt="Own image 2 edits">
-          <figcaption>My image 2: edits across noise levels.</figcaption>
+          <img src="./media/diffusion_redeemer.jpg" alt="diffusion_redeemer">
+          <figcaption>Christ the Redeemer across different noise levels.</figcaption>
         </figure>
       </div>
-
+      <div class="grid">
+        <figure>
+          <img src="./media/diffusion_golden_gate.jpg" alt="diffusion_golden_gate">
+          <figcaption>The Golden Gate across different noise levels.</figcaption>
+        </figure>
+      </div>
+      
       <p><strong>1.7.1: Hand-Drawn and Web Images</strong></p>
       <p>TODO: Insert grids for one web image and two hand-drawn images across noise levels [1, 3, 5, 7, 10, 20].</p>
 
