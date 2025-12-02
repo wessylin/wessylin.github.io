@@ -524,20 +524,29 @@
       <!-- 1.9 Hybrid Images -->
       <h3 class="subsection-title" id="p1-hybrids">1.9: Hybrid Images</h3>
       <p>
-        TODO: Explain how you constructed hybrid images by mixing low frequencies from one
-        concept and high frequencies from another in the diffusion noise estimates, and how
-        they look different up close vs from far away.
+        In Part 1.9, I implemented hybrid images by adapting the classical hybrid-image idea to the diffusion noise domain. At each denoising step, 
+        I generated two guided noise estimates using different text prompts, <em>p₁</em> and <em>p₂</em>. I then applied a Gaussian blur to extract
+        the low-frequency component of the first estimate and computed the high-frequency component of the second by subtracting its blurred version. 
+        Combining these two filtered noise fields produced a composite noise estimate that blends global structure from <em>p₁</em> with fine details 
+        from <em>p₂</em>. Using this hybrid noise inside the DDPM update rule generated images whose overall appearance follows one prompt while subtly 
+        incorporating texture and detail from the other.
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/p1_hybrid1.png" alt="Hybrid 1">
-          <figcaption>Hybrid image 1.</figcaption>
+          <img src="./media/rabbit_train.jpg" alt="rabbit_train">
+          <figcaption>Low frequency: rabbit, High frequency: train.</figcaption>
         </figure>
       </div>
       <div class="grid">
         <figure>
-          <img src="./media/p1_hybrid2.png" alt="Hybrid 2">
-          <figcaption>Hybrid image 2.</figcaption>
+          <img src="./media/campfire_sailboat.jpg" alt="campfire_sailboat">
+          <figcaption>Low frequency: campfire, High frequency: sailboat</figcaption>
+        </figure>
+      </div>
+      <div class="grid">
+        <figure>
+          <img src="./media/flower_candle.jpg" alt="flower_candle">
+          <figcaption>Low frequency: flowers, High frequency: candle</figcaption>
         </figure>
       </div>
     </section>
