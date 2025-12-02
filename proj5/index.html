@@ -469,46 +469,55 @@
       <div class="grid">
         <figure>
           <img src="./media/christmas_campanile.jpg" alt="christmas_campanile">
-          <figcaption>Original image: Campanile, Prompt: "The Chicago Christmas tree lighting ceremony".</figcaption>
+          <figcaption>Original image: the Campanile, Prompt: "The Chicago Christmas tree lighting ceremony".</figcaption>
         </figure>
       </div>
       
       <div class="grid">
         <figure>
           <img src="./media/einstein_beetle.jpg" alt="einstein_beetle">
-          <figcaption>Original image: Beetle, Prompt: "Einstein riding a scooter to class in Berkeley".</figcaption>
+          <figcaption>Original image: a Beetle, Prompt: "Einstein riding a scooter to class in Berkeley".</figcaption>
         </figure>
       </div>
 
       <div class="grid">
         <figure>
           <img src="./media/taiwan_mona.jpg" alt="taiwan_mona">
-          <figcaption>Original image: Mona Lisa Showroom, Prompt: "A street in Taiwan with nice lighting".</figcaption>
+          <figcaption>Original image: the Mona Lisa Showroom, Prompt: "A street in Taiwan with nice lighting".</figcaption>
         </figure>
       </div>
 
       <!-- 1.8 Visual Anagrams -->
       <h3 class="subsection-title" id="p1-anagrams">1.8: Visual Anagrams</h3>
+      
       <p>
-        TODO: Describe how you constructed visual anagrams by combining guidance for two prompts,
-        one on the original orientation and one on a flipped version of the image.
+        In Part 1.8, I implemented <code>make_flip_illusion</code> by generating two guided noise estimates at each denoising step, one conditioned on the
+        upright prompt and one on the flipped-image prompt. For the second estimate, I flipped the current noisy image upside-down, ran the UNet with the second 
+        prompt, then flipped the predicted noise back. Averaging these two noise estimates produced a single blended prediction that encourages the image to 
+        resemble prompt <em>p₁</em> when upright and <em>p₂</em> when flipped. I then fed this averaged noise into the usual DDPM update equations to iteratively refine the image.
       </p>
+      
+      <p>
+        This works because the diffusion model responds consistently to flipped inputs, so by combining upright and flipped noise estimates, we effectively bake two
+        different semantic interpretations into one image, creating a visual anagram that changes meaning when rotated 180°.
+      </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/p1_anagram1_upright.png" alt="Anagram 1 upright">
-          <figcaption>Visual anagram 1 (upright).</figcaption>
+          <img src="./media/sur_sailboat.jpg" alt="sur_sailboat">
+          <figcaption>Upright: Big Sur, Flipped: a sailboat.</figcaption>
         </figure>
+      </div>
+      <div class="grid">
         <figure>
-          <img src="./media/p1_anagram1_flipped.png" alt="Anagram 1 flipped">
-          <figcaption>Visual anagram 1 (flipped).</figcaption>
+          <img src="./media/flowers_rabbit.jpg" alt="flower_rabbit.jpg">
+          <figcaption>Upright: flowers, Flipped: a rabbit.</figcaption>
         </figure>
+      </div>
+      <div class="grid">
         <figure>
-          <img src="./media/p1_anagram2_upright.png" alt="Anagram 2 upright">
-          <figcaption>Visual anagram 2 (upright).</figcaption>
-        </figure>
-        <figure>
-          <img src="./media/p1_anagram2_flipped.png" alt="Anagram 2 flipped">
-          <figcaption>Visual anagram 2 (flipped).</figcaption>
+          <img src="./media/sam_rosie.jpg" alt="sam_rosie.jpg">
+          <figcaption>Upright: Uncle Sam, Flipped: Rosie the Riveter.</figcaption>
         </figure>
       </div>
 
