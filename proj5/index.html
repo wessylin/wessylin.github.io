@@ -221,9 +221,6 @@
         </figure>
       </div>
       
-    </section>
-
-    <section>
       <h2 class="subsection-title">Part 1: Sampling Loops</h2>
 
       <!-- 1.1 Forward Process -->
@@ -298,7 +295,7 @@
         scheduler’s variance prediction, which injects the correct amount of randomness at each step.
       </p>
       <p>
-        To visualize the process, I saved the intermediate images every 5 iterations. The results show
+        To visualise the process, I saved the intermediate images every 5 iterations. The results show
         the Campanile gradually emerging from pure noise as the model walks back along the diffusion
         trajectory. Finally, I compared four images side by side: the original noisy input, the final
         iterative denoising result, the one-step UNet denoising result from Part 1.3, and a simple
@@ -352,7 +349,7 @@
       <code>"a high quality photo"</code> and an unconditional one for the empty string), and ran the UNet 
       twice at each denoising step. Using the equation 
       <em>&epsilon; = &epsilon;<sub>u</sub> + &gamma;(&epsilon;<sub>c</sub> − &epsilon;<sub>u</sub>)</em>, 
-      I computed a guided noise estimate that emphasizes features related to the text prompt.
+      I computed a guided noise estimate that emphasises features related to the text prompt.
       </p>
       
       <p>
