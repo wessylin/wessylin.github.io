@@ -434,41 +434,50 @@
       </p>
       <div class="grid">
         <figure>
-          <img src="./media/campanile_inpaint.jpg" alt="campanile_inpaint" width=650>
+          <img src="./media/campanile_inpaint.jpg" alt="campanile_inpaint" width=550>
           <figcaption>The Campanile inpainted with a custom mask.</figcaption>
         </figure>
       </div>
       <div class="grid">
         <figure>
-          <img src="./media/beetle_inpaint.jpg" alt="beetle_inpaint.jpg" width=650>
+          <img src="./media/beetle_inpaint.jpg" alt="beetle_inpaint.jpg" width=550>
           <figcaption>A Beetle car inpainted with a custom mask.</figcaption>
         </figure>
       </div>
       <div class="grid">
         <figure>
-          <img src="./media/mona_lisa_inpaint.jpg" alt="mona_lisa_inpaint" width=650>
+          <img src="./media/mona_lisa_inpaint.jpg" alt="mona_lisa_inpaint" width=550>
           <figcaption>The Mona Lisa showcase at the Louvre inpainted with a custom mask.</figcaption>
         </figure>
       </div>
 
       <p><strong>1.7.3: Text-Conditional Image-to-Image</strong></p>
       <p>
-        TODO: Show how changing the text prompt affects the final image when using
-        the same starting image/noise level. Include grids for the Campanile and two of
-        your own images.
+        In Part 1.7.3, I extended my image-to-image translation pipeline by conditioning the denoising process on descriptive text prompts. 
+        Instead of guiding the projection back to the natural image manifold using only <em>"a high quality photo"</em>, I replaced the conditional 
+        embedding with arbitrary prompts to steer the diffusion model toward edits that reflect both the original image structure and the new textual 
+        concept.
       </p>
+      
+      <p>
+        To implement this, I reused my <code>iterative_denoise_cfg</code> function and simply swapped in new prompt embeddings. I then ran the forward-diffusion 
+        step to different noise levels (corresponding to start indices [1, 3, 5, 7, 10, 20]) and denoised from those points while applying classifier-free 
+        guidance. Lower starting indices preserved more of the original content, while higher ones allowed more dramatic transformations. This produced a 
+        smooth progression of edits that increasingly blended the input image with the semantics of the text prompt.
+      </p>
+      
       <div class="grid">
         <figure>
-          <img src="./media/p1_i2i_text_camp.png" alt="Text-conditional Campanile edits">
-          <figcaption>Text-conditional edits of the Campanile.</figcaption>
+          <img src="./media/christmas_campanile.jpg" alt="christmas_campanile">
+          <figcaption>Original image: Campanile, Prompt: "The Chicago Christmas tree lighting ceremony".</figcaption>
         </figure>
         <figure>
-          <img src="./media/p1_i2i_text_own1.png" alt="Text-conditional own image 1">
-          <figcaption>Text-conditional edits of my image 1.</figcaption>
+          <img src="./media/einstein_beetle.jpg" alt="einstein_beetle">
+          <figcaption>Original image: Beetle, Prompt: "Einstein riding a scooter to class in Berkeley".</figcaption>
         </figure>
         <figure>
-          <img src="./media/p1_i2i_text_own2.png" alt="Text-conditional own image 2">
-          <figcaption>Text-conditional edits of my image 2.</figcaption>
+          <img src="./media/taiwan_mona.jpg" alt="taiwan_mona">
+          <figcaption>Original image: Mona Lisa Showroom, Prompt: "A street in Taiwan with nice lighting".</figcaption>
         </figure>
       </div>
 
