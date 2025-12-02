@@ -347,20 +347,20 @@
       <!-- 1.6 CFG -->
       <h3 class="subsection-title" id="p1-cfg">1.6: Classifier-Free Guidance (CFG)</h3>
       <p>
-        In Part 1.6, I extended my iterative denoising pipeline to support
-        <strong>Classifier-Free Guidance (CFG)</strong>, which improves sample quality by
-        combining conditional and unconditional noise predictions. I created two prompt
-        embeddings (a conditional one for <code>"a high quality photo"</code>
-        and an unconditional one for the empty string), and ran the UNet twice at each
-        denoising step. Using the equation,
-        <code>&epsilon; = \epsilon_u + \gamma (\epsilon_c - \epsilon_u)</code>, I computed
-        a guided noise estimate that emphasizes features related to the text prompt.
+      In Part 1.6, I extended my iterative denoising pipeline to support 
+      <strong>Classifier-Free Guidance (CFG)</strong>, which improves sample quality by combining conditional 
+      and unconditional noise predictions. I created two prompt embeddings (a conditional one for 
+      <code>"a high quality photo"</code> and an unconditional one for the empty string), and ran the UNet 
+      twice at each denoising step. Using the equation 
+      <em>&epsilon; = &epsilon;<sub>u</sub> + &gamma;(&epsilon;<sub>c</sub> − &epsilon;<sub>u</sub>)</em>, 
+      I computed a guided noise estimate that emphasizes features related to the text prompt.
       </p>
+      
       <p>
-        I then substituted this guided noise into the same DDPM update rules used earlier,
-        requiring only minimal changes to the denoising loop. With a guidance scale of
-        <code>\gamma = 7</code>, the model produced noticeably sharper and more coherent
-        samples compared to the unguided generation in Part 1.5.
+      I then substituted this guided noise into the same DDPM update rules used earlier, requiring 
+      only minimal changes to the denoising loop. With a guidance scale of 
+      <em>&gamma; = 7</em>, the model produced noticeably sharper and more coherent samples 
+      compared to the unguided generation in Part 1.5.
       </p>
       <div class="grid">
         <figure>
@@ -426,8 +426,11 @@
 
       <p><strong>1.7.2: Inpainting</strong></p>
       <p>
-        TODO: Describe how you used a mask to keep unmasked regions close to the original
-        while allowing the masked region to be resynthesized.
+      For inpainting, I followed the RePaint-style update from <strong>Equation (5)</strong>, 
+      where the model combines its prediction with the original image according to 
+      <em>x<sub>t</sub> = m · x<sub>t</sub><sup>model</sup> + (1 − m) · x<sub>t</sub><sup>orig</sup></em>. 
+      At each denoising step, only the masked region is regenerated while the unmasked region is restored from the noised original image. 
+      Using this method, I was able to naturally fill in the missing top portion of the beetle image based on the prompt “a high quality photo.”
       </p>
       <div class="grid">
         <figure>
