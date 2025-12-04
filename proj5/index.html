@@ -566,28 +566,60 @@
     <!-- 1.1 Implementing the UNet -->
     <h3 class="subsection-title" id="b1-1">Part 1.1: Implementing the UNet</h3>
     <p>
-      I implemented an unconditional UNet composed of downsampling and upsampling
-      blocks with skip connections. Each block uses standard components like
-      <code>Conv2d</code>, <code>BatchNorm2d</code>, <code>GELU</code>,
-      <code>AvgPool2d</code>, and <code>ConvTranspose2d</code>, mirroring the
-      architecture in the project spec. The network takes noisy 1-channel MNIST
-      images as input and outputs a denoised image of the same size.
+      In Part 1.1, I implemented the core building blocks of a standard UNet&mdash;
+      <code>Conv</code>, <code>DownConv</code>, <code>UpConv</code>, <code>Flatten</code>, 
+      <code>Unflatten</code>, and the composed <code>ConvBlock</code>, 
+      <code>DownBlock</code>, and <code>UpBlock</code>. Each component mirrors the 
+      operations in the UNet diagram: downsampling halves the spatial resolution, 
+      upsampling restores it, and skip connections preserve high-resolution features. 
+      Together, these modules form the encoder&ndash;bottleneck&ndash;decoder structure 
+      typical of UNet architectures and provide the foundation for more advanced 
+      diffusion-model UNets used later in the project.
     </p>
 
     <div class="grid">
       <figure>
-        <img src="./media/b1_unet_architecture.png" alt="Unconditional UNet diagram">
-        <figcaption>Figure B.1: Unconditional UNet architecture used for denoising.</figcaption>
+        <img src="./media/standard_unet.jpg" alt="standard_unet">
+        <figcaption>Architecture of our standard UNet operations.</figcaption>
+      </figure>
+    </div>
+
+    <p>
+      Using these components, I then built an <strong>Unconditional UNet</strong>, which 
+      follows the same hierarchical layout but removes all external conditioning 
+      (no timestep or text embeddings, no attention). The network takes only a noisy 
+      MNIST image as input and learns to reconstruct the clean digit. Unlike the 
+      diffusion UNet&mdash;which integrates conditioning signals and feature modulation&mdash;
+      this unconditional UNet is a compact, purely convolutional denoiser with skip 
+      connections and a small bottleneck, making it well suited for simple MNIST 
+      reconstruction.
+    </p>
+
+    <div class="grid">
+      <figure>
+        <img src="./media/unconventional_unet.jpg" alt="unconventional_unet">
+        <figcaption>Architecture of our Unconditional UNet.</figcaption>
       </figure>
     </div>
 
     <!-- 1.2 Using the UNet to Train a Denoiser -->
     <h3 class="subsection-title" id="b1-2">Part 1.2: Using the UNet to Train a Denoiser</h3>
     <p>
-      To train the denoiser, I generate pairs <code>(z, x)</code> by adding Gaussian
-      noise with standard deviation <code>σ</code> to clean MNIST digits, then
-      minimize the L2 loss between the UNet output and the original clean image.
+      In Part 1.2, I implemented a visualization of the noising process used to 
+      train the unconditional UNet denoiser. For several MNIST digits, I added 
+      Gaussian noise at progressively increasing levels 
+      <code>σ ∈ {0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0}</code>. 
+      The resulting figure displays the clean images in the top row and shows how 
+      each digit becomes increasingly corrupted as σ grows. Low noise levels retain 
+      recognizable structure, while high noise levels produce almost pure noise. 
     </p>
+
+    <div class="grid">
+      <figure>
+        <img src="./media/unet_noise.jpg" alt="unet_noise">
+        <figcaption>5 MNIST samples with increasing noise.</figcaption>
+      </figure>
+    </div>
 
     <!-- 1.2.1 Visualizing the Noising Process -->
     <h3 class="subsection-title" id="b1-2-noising">Part 1.2.1: Visualizing the Noising Process</h3>
