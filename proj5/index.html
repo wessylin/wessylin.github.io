@@ -733,17 +733,28 @@
     <!-- 2.1 Adding Time Conditioning -->
     <h3 class="subsection-title" id="b2-1">Part 2.1: Adding Time Conditioning to the UNet</h3>
     <p>
-      I extend the UNet with time conditioning by embedding a scalar
-      <code>t ∈ [0, 1]</code> using small fully-connected blocks
-      (<code>FCBlock</code>) and injecting these embeddings into the unflatten and
-      upsampling layers. This lets the network model how the flow changes over
-      time as we move from noise to data.
+      To incorporate time into the UNet, we condition the model on the scalar diffusion timestep
+      <em>t</em> by injecting a learned embedding into key intermediate layers. Because <em>t</em> carries
+      no spatial structure, we map it through a small fully connected module (FCBlock), which consists
+      of two linear layers with a GELU in between. This produces a feature vector whose dimension
+      matches the UNet feature maps at the bottleneck and early upsampling stages. We then broadcast
+      this vector and modulate the corresponding feature maps through element-wise multiplication,
+      allowing the network to adapt its denoising behavior as a function of diffusion time. The FCBlock
+      therefore serves as a lightweight mechanism to transform a scalar timestep into a meaningful
+      conditioning signal that guides the UNet throughout the denoising process.
     </p>
 
     <div class="grid">
       <figure>
-        <img src="./media/b2_time_cond_unet.png" alt="Time-conditioned UNet diagram">
-        <figcaption>Time-conditioned UNet with FCBlocks for the timestep t.</figcaption>
+        <img src="./media/fcblock_unet.jpg" alt="fcblock_unet">
+        <figcaption>Architecture of our UNet with time conditioning via FCBlocks.</figcaption>
+      </figure>
+    </div>
+
+    <div class="grid">
+      <figure>
+        <img src="./media/fcblock.jpg" alt="fcblock">
+        <figcaption>Architecture of the FCBlock for injecting time information.</figcaption>
       </figure>
     </div>
 
@@ -760,8 +771,8 @@
 
     <div class="grid">
       <figure>
-        <img src="./media/b2_time_cond_loss.png" alt="Time-conditioned flow matching loss curve">
-        <figcaption>Training loss curve for the time-conditioned flow-matching UNet.</figcaption>
+        <img src="./media/22_curve.jpg" alt="22_curve">
+        <figcaption>.</figcaption>
       </figure>
     </div>
 
