@@ -782,23 +782,29 @@
     <!-- 2.3 Sampling from the Time-Conditioned UNet -->
     <h3 class="subsection-title" id="b2-3">Part 2.3: Sampling from the Time-Conditioned UNet</h3>
     <p>
-      To sample, I start from pure noise and follow the learned flow backward in
-      time using the provided sampling algorithm. I visualize grids of generated
-      digits after different numbers of training epochs to show how sample quality
-      improves as the model converges.
+      In Part 2.3, we implemented the time-conditioned sampling UNet algorithm to sample from our trained time-conditioned UNet 
+      by transforming pure Gaussian noise into recognizable MNIST digits. Starting from 
+      <em>x<sub>0</sub> &sim; &mathcal;N(0, I)</em>, the algorithm iteratively applies the update 
+      <em>x<sub>t + &Delta;t</sub> = x<sub>t</sub> + &Delta;t &middot; u<sub>&theta;</sub>(x<sub>t</sub>, t)</em>, 
+      using the UNet’s predicted flow to gradually denoise the image as <em>t</em> progresses from 0 to 1. 
     </p>
 
+    <p>
+    Running this procedure after epochs 1, 5, and 10 produced samples of increasing quality, demonstrating that the learned flow field effectively guides noisy inputs 
+    toward the data manifold and enables the model to generate new, coherent digit images.
+    </p>
+      
     <div class="grid">
       <figure>
-        <img src="./media/b2_sampling_epoch1.png" alt="Flow matching samples epoch 1">
+        <img src="./media/unet_1.jpg" alt="unet_1">
         <figcaption>Sampling results from the time-conditioned UNet after 1 epoch.</figcaption>
       </figure>
       <figure>
-        <img src="./media/b2_sampling_epoch5.png" alt="Flow matching samples epoch 5">
+        <img src="./media/unet_5.jpg" alt="unet_5">
         <figcaption>Sampling results after 5 epochs.</figcaption>
       </figure>
       <figure>
-        <img src="./media/b2_sampling_epoch10.png" alt="Flow matching samples epoch 10">
+        <img src="./media/unet_10.jpg" alt="unet_10">
         <figcaption>Sampling results after 10 epochs.</figcaption>
       </figure>
     </div>
