@@ -812,21 +812,14 @@
     <!-- 2.4 Adding Class-Conditioning -->
     <h3 class="subsection-title" id="b2-4">Part 2.4: Adding Class-Conditioning to the UNet</h3>
     <p>
-      I then add class conditioning by passing a one-hot digit label
-      <code>c</code> through additional <code>FCBlock</code>s and using their
-      outputs to modulate the unflatten and upsampling layers. To enable
-      classifier-free guidance, I randomly drop class conditioning with
-      probability <code>p<sub>uncond</sub> = 0.1</code> during training by
-      zeroing out <code>c</code>.
+      In Part 2.4, we extended the UNet to accept class labels by introducing additional FCBlocks that embed a 
+      one-hot class vector and modulate two intermediate feature maps, similar to how time conditioning is 
+      applied. To enable classifier-free guidance, we randomly dropped the class embedding with probability 
+      <em>p<sub>uncond</sub> = 0.1</em>, teaching the model both conditional and unconditional behaviors. This 
+      modification allows the UNet to incorporate class information directly into its feature transformations, 
+      enabling controlled digit generation in later sampling.
     </p>
-
-    <div class="grid">
-      <figure>
-        <img src="./media/b2_class_cond_loss.png" alt="Class-conditioned flow matching loss">
-        <figcaption>Training loss curve for the class-conditioned UNet.</figcaption>
-      </figure>
-    </div>
-
+      
     <!-- 2.5 Training the Class-Conditioned UNet -->
     <h3 class="subsection-title" id="b2-5">Part 2.5: Training the Class-Conditioned UNet</h3>
     <p>
