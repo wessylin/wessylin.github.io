@@ -622,13 +622,21 @@
     </div>
 
     <!-- 1.2.1 Visualizing the Noising Process -->
-    <h3 class="subsection-title" id="b1-2-noising">Part 1.2.1: Visualizing the Noising Process</h3>
+    <h3 class="subsection-title" id="b1-2-noising">Part 1.2.1: Visualizing the Noising Process -- Training at σ = 0.5</h3>
     <p>
-      I first visualize how different noise levels affect a fixed digit by sampling
-      <code>z = x + σ ε</code> with <code>ε ∼ N(0, I)</code> and
-      <code>σ ∈ [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]</code>. This helps build
-      intuition for how challenging the denoising task becomes as we move toward
-      pure noise.
+      To train the MNIST denoiser, I built a full pipeline around the unconditional UNet from Part 1.1. 
+      Using a fixed noise level of <code>&sigma; = 0.5</code>, each clean MNIST image was noised on the fly via 
+      the forward process <code>z = x + &sigma; &epsilon;</code>, so the model saw fresh noise every epoch. 
+      I optimized a mean squared error loss between the denoised prediction and the clean target using Adam 
+      with a learning rate of <code>1 &times; 10<sup>-4</sup></code>, training for 5 epochs and saving checkpoints 
+      after the 1st and 5th epoch for later visualization.
+    </p>
+    
+    <p>
+      The training loss curve showed smooth, consistent decay, indicating stable learning. When evaluated on noisy 
+      test digits, the 1-epoch model produced blurry but recognizable shapes, while the 5-epoch model generated 
+      significantly sharper digits with clearer structure. This confirms that the UNet successfully learned to map 
+      noisy inputs back to clean MNIST images and improved steadily with more training.
     </p>
 
     <div class="grid">
@@ -638,6 +646,9 @@
           Loss curve over 5 epochs for single-step denoiser (σ = 0.5).
         </figcaption>
       </figure>
+    </div>
+    
+    <div class="grid">
       <figure>
         <img src="./media/epoch_1.jpg" alt="epoch_1">
         <figcaption>
@@ -651,68 +662,60 @@
         </figcaption>
       </figure>
     </div>
-      
-    <!-- 1.2.2 Training at σ = 0.5 -->
-    <h3 class="subsection-title" id="b1-2-train">Part 1.2.2: Training at σ = 0.5</h3>
+
+    <!-- 1.2.2 Out-of-Distribution Testing -->
+    <h3 class="subsection-title" id="b1-2-ood">Part 1.2.2: Out-of-Distribution Testing</h3>
     <p>
-      I train the UNet to denoise digits corrupted with a fixed
-      <code>σ = 0.5</code>, using the MNIST training set and Adam optimizer. I log
-      the training loss over iterations and visualize test-set denoising results
-      after the 1st and 5th epochs to show improvement in reconstruction quality.
+      To study how well the denoiser generalizes beyond its training noise level, I reused the trained UNet 
+      (trained only on <code>&sigma; = 0.5</code>) and evaluated it on test images corrupted with a range of 
+      noise levels <code>&sigma; ∈ {0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0}</code>. For each noise level, I generated 
+      noisy inputs and passed them through the fixed model, visualizing the clean, noisy, and denoised results 
+      side by side.
+    </p>
+    
+    <p>
+      The visualizations show that the denoiser works best near the training level (&sigma; ≈ 0.5), where it 
+      produces sharp, accurate reconstructions. At lower noise (&sigma; = 0.0–0.2), it slightly oversmooths 
+      the digits, and at higher noise (&sigma; = 0.8–1.0), it tends to hallucinate digit-like shapes instead of 
+      faithfully recovering the input. This highlights that the model is strongly biased toward the noise 
+      distribution it was trained on and has limited robustness far outside that range.
     </p>
 
     <div class="grid">
       <figure>
-        <img src="./media/b1_sigma05_loss.png" alt="Training loss for sigma 0.5">
-        <figcaption>Training loss curve for σ = 0.5 over 5 epochs.</figcaption>
-      </figure>
-      <figure>
-        <img src="./media/b1_epoch1_vs5.png" alt="Denoising results epoch 1 vs 5">
+        <img src="./media/122.jpg" alt="122">
         <figcaption>
-          Denoised test digits after 1 epoch (top) vs 5 epochs (bottom).
+          Out-of-distribution denoising across 7 noise levels.
         </figcaption>
       </figure>
     </div>
 
-    <!-- 1.2.3 Out-of-Distribution Testing -->
-    <h3 class="subsection-title" id="b1-2-ood">Part 1.2.3: Out-of-Distribution Testing</h3>
+    <!-- 1.2.3 Denoising Pure Noise -->
+    <h3 class="subsection-title" id="b1-2-pure-noise">Part 1.2.3: Denoising Pure Noise</h3>
     <p>
-      Although the model is trained at <code>σ = 0.5</code>, I also test it on
-      digits noised with unseen σ values. For each row, I keep the underlying
-      digit fixed and vary σ, then compare the denoiser’s outputs to assess how
-      robust it is to different noise levels.
+      To probe the denoiser’s learned prior, I fed pure Gaussian noise (<code>&sigma; = 1.0</code>) into the trained 
+      UNet and visualized its outputs after the 1st and 5th training epochs. The model was only ever trained to 
+      map noisy MNIST digits back to clean digits, so it has never seen inputs without an underlying digit structure.
+    </p>
+    
+    <p>
+      The results show clear patterns: after a single epoch, the network already produces blurry digit-like blobs, 
+      and by the 5th epoch, the outputs resemble sharper, more recognizable MNIST digits, despite the input being 
+      pure noise. This behavior indicates that the UNet has learned a strong implicit prior over the MNIST manifold. 
+      When there is no real signal to denoise, it “hallucinates” the kinds of digit-shaped patterns it expects, 
+      revealing that it is doing more than simply removing noise.
     </p>
 
     <div class="grid">
       <figure>
-        <img src="./media/b1_ood_sigma_grid.png" alt="OOD denoising across sigma values">
-        <figcaption>
-          Denoising results for a fixed digit with varying σ (out-of-distribution test).
-        </figcaption>
+        <img src="./media/123_curve.jpg" alt="123_curve">
+        <figcaption>Training loss curve when denoising pure noise to MNIST digits.</figcaption>
       </figure>
     </div>
-
-    <!-- 1.2.4 Denoising Pure Noise -->
-    <h3 class="subsection-title" id="b1-2-pure-noise">Part 1.2.4: Denoising Pure Noise</h3>
-    <p>
-      To turn denoising into a generative task, I train the UNet to map pure
-      Gaussian noise <code>z = ε ∼ N(0, I)</code> directly to MNIST-like digits.
-      I show the training loss, sampled outputs after 1 and 5 epochs, and compare
-      them qualitatively to the average training-set image.
-    </p>
-
     <div class="grid">
       <figure>
-        <img src="./media/b1_pure_noise_loss.png" alt="Pure noise denoising loss">
-        <figcaption>Training loss when denoising pure noise to MNIST digits.</figcaption>
-      </figure>
-      <figure>
-        <img src="./media/b1_pure_noise_samples.png" alt="Pure noise denoising samples">
-        <figcaption>Generated digits from pure noise after training.</figcaption>
-      </figure>
-      <figure>
-        <img src="./media/b1_avg_train_image.png" alt="Average MNIST training image">
-        <figcaption>Average MNIST training image for comparison.</figcaption>
+        <img src="./media/123_output.jpg" alt="123_output">
+        <figcaption>Generated digits from pure noise after training 1 and 5 epochs.</figcaption>
       </figure>
     </div>
 
