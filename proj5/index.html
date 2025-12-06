@@ -775,7 +775,7 @@
     <div class="grid">
       <figure>
         <img src="./media/22_curve.jpg" alt="22_curve" width=370>
-        <figcaption>.</figcaption>
+        <figcaption>Time conditioned UNet training loss curve.</figcaption>
       </figure>
     </div>
 
@@ -823,38 +823,54 @@
     <!-- 2.5 Training the Class-Conditioned UNet -->
     <h3 class="subsection-title" id="b2-5">Part 2.5: Training the Class-Conditioned UNet</h3>
     <p>
-      Using the class-conditioned model, I generate digits with
-      classifier-free guidance (e.g., γ = 5). For each class 0–9, I sample
+      In Part 2.5, we trained the class-conditional UNet using the class-conditional flow-matching objective. 
+      For each batch of MNIST images and labels, we sampled a random timestep <em>t &sim; U(0, 1)</em>, constructed 
+      the noisy interpolation <em>x<sub>t</sub> = (1 - t)x<sub>0</sub> + t x<sub>1</sub></em>, and predicted the flow 
+      using the UNet conditioned on both the timestep and the class label. To support classifier-free guidance, we 
+      randomly dropped the class embedding with probability <em>p<sub>uncond</sub> = 0.1</em>. The predicted flow was 
+      compared to the ground-truth flow <em>x<sub>1</sub> - x<sub>0</sub></em> using an MSE loss, and we optimized the 
+      network for 10 epochs with Adam and exponential learning-rate decay. 
+    </p>
+      This training procedure enables the model to learn how class information shapes the flow field, making class-controlled 
+      sampling possible in Part 2.6.
+    <p>
+      
     </p>
 
     <div class="grid">
       <figure>
         <img src="./media/25_curve.jpg" alt="25_curve.jpg">
-        <figcaption>Class-conditional samples (digits 0–9) after 1 epoch.</figcaption>
+        <figcaption>Class-conditioned training loss curve.</figcaption>
       </figure>
     </div>
       
     <!-- 2.6 Sampling from the Class-Conditioned UNet -->
     <h3 class="subsection-title" id="b2-5">Part 2.6: Sampling from the Class-Conditioned UNet</h3>
     <p>
-      Using the class-conditioned model, I generate digits with
-      classifier-free guidance (e.g., γ = 5). For each class 0–9, I sample
-      multiple images and compare results after different training epochs, as
-      well as with and without the learning-rate scheduler.
+      In Part 2.6, we generated class-conditioned MNIST samples using Algorithm B.4. Starting from Gaussian noise,
+      we repeatedly applied conditional and unconditional UNet predictions, combined them with classifier-free 
+      guidance, and used Euler updates to gradually produce images matching each target class. We visualized 
+      samples at epochs 1, 5, and 10 to show how image quality improves as training progresses.
+    </p>
+    <p>
+      To test whether we could remove the learning-rate scheduler, we retrained the model using a simple fixed 
+      learning rate. By slightly lowering the LR (e.g., from <em>1e-2</em> to <em>5e-3</em>) and adding a few 
+      more epochs, we maintained comparable performance, demonstrating that a tuned constant LR can replace the 
+      scheduler while keeping the training pipeline simpler.
     </p>
 
     <div class="grid">
       <figure>
-        <img src="./media/b2_class_samples_epoch1.png" alt="Class-conditioned samples epoch 1">
-        <figcaption>Class-conditional samples (digits 0–9) after 1 epoch.</figcaption>
+        <img src="./media/25_epoch1.jpg" alt="25_epoch1">
+        <figcaption>Class-conditioned samples after 1 epoch.</figcaption>
       </figure>
       <figure>
-        <img src="./media/b2_class_samples_epoch5.png" alt="Class-conditioned samples epoch 5">
-        <figcaption>Class-conditional samples after 5 epochs.</figcaption>
+        <img src="./media/25_epoch5.jpg" alt="25_epoch5">
+        <figcaption>Class-conditioned samples after 5 epochs.</figcaption>
       </figure>
       <figure>
-        <img src="./media/b2_class_samples_epoch10.png" alt="Class-conditioned samples epoch 10">
-        <figcaption>Class-conditional samples after 10 epochs.</figcaption>
+        <img src="./media/25_epoch10.jpg" alt="25_epoch10">
+        <figcaption>Class-conditioned samples after 10 epochs.</figcaption>
       </figure>
     </div>
 
