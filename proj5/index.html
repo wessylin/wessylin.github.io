@@ -852,13 +852,7 @@
       guidance, and used Euler updates to gradually produce images matching each target class. We visualized 
       samples at epochs 1, 5, and 10 to show how image quality improves as training progresses.
     </p>
-    <p>
-      To test whether we could remove the learning-rate scheduler, we retrained the model using a simple fixed 
-      learning rate. By slightly lowering the LR (e.g., from <em>1e-2</em> to <em>5e-3</em>) and adding a few 
-      more epochs, we maintained comparable performance, demonstrating that a tuned constant LR can replace the 
-      scheduler while keeping the training pipeline simpler.
-    </p>
-
+      
     <div class="grid">
       <figure>
         <img src="./media/25_epoch1.jpg" alt="25_epoch1">
@@ -874,12 +868,25 @@
       </figure>
     </div>
 
+    <p>
+      To test whether we could remove the learning-rate scheduler, we retrained the model using a simple fixed 
+      learning rate. By slightly lowering the LR (e.g., from <em>1e-2</em> to <em>5e-3</em>) and adding a few 
+      more epochs, we maintained comparable performance, demonstrating that a tuned constant LR can replace the 
+      scheduler while keeping the training pipeline simpler.
+    </p>
+
     <div class="grid">
       <figure>
-        <img src="./media/b2_scheduler_ablation.png" alt="Scheduler ablation comparison">
-        <figcaption>
-          Comparison of samples with vs. without the learning-rate scheduler.
-        </figcaption>
+        <img src="./media/25_epoch1_no.jpg" alt="25_epoch1_no">
+        <figcaption>Samples after 1 epoch with fixed learning rate.</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/25_epoch5_no.jpg" alt="25_epoch5_no">
+        <figcaption>Samples after 5 epochs with fixed learning rate.</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/25_epoch10_no.jpg" alt="25_epoch10_no">
+        <figcaption>Samples after 10 epochs with fixed learning rate.</figcaption>
       </figure>
     </div>
 
