@@ -761,12 +761,15 @@
     <!-- 2.2 Training the Time-Conditioned UNet -->
     <h3 class="subsection-title" id="b2-2">Part 2.2: Training the Time-Conditioned UNet</h3>
     <p>
-      During training, I sample <code>x₀</code> from a Gaussian prior,
-      <code>x₁</code> from the MNIST dataset, and a random time
-      <code>t ∼ U[0, 1]</code>, then linearly interpolate
-      <code>x_t = (1 - t)x₀ + t x₁</code>. The UNet is trained to predict the flow
-      <code>u(x_t, t) ≈ x₁ − x₀</code> using an L2 loss, with an exponential
-      learning-rate scheduler.
+      In Part 2.2, we trained the time-conditioned UNet to predict the flow between a noisy image
+      <em>x<sub>t</sub></em> and its clean counterpart <em>x<sub>1</sub></em> using the flow-matching objective.
+      For each batch of MNIST images, we sampled a random timestep <em>t</em> &sim; U(0, 1), generated a noisy
+      interpolation <em>x<sub>t</sub> = (1 - t)x<sub>0</sub> + t x<sub>1</sub></em>, and passed
+      <em>x<sub>t</sub></em> and <em>t</em> into our conditioned UNet through the
+      <code>TimeConditionalFM</code> wrapper. The model’s predicted flow was compared to the ground-truth
+      flow with an MSE loss, and we optimized the network using Adam with an exponential learning-rate
+      decay schedule. Training was performed over shuffled mini-batches of size 64, and we recorded the
+      per-iteration losses to visualize convergence across the 10 training epochs.
     </p>
 
     <div class="grid">
